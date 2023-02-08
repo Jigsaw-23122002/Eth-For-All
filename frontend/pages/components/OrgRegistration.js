@@ -64,6 +64,7 @@ function OrgRegistration() {
   }
   function register() {
     console.log("Register the Organization");
+    upload(files);
     setConfirmModal(false);
   }
 
