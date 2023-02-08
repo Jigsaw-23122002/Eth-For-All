@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { ThemeProvider } from "next-themes";
 import { useDropzone } from "react-dropzone";
-import { upload } from "../utils/put-files";
+import { Web3Storage } from "web3.storage";
 
 let files = [];
 
 function OrgRegistration() {
-  const { getRootProps, getInputProps, acceptedFiles } = useDropzone({});
+  const { getRootProps, getInputProps } = useDropzone({});
   const [username, setUsername] = useState("");
   const [phone, setPhone] = useState("");
   const [pwd, setPwd] = useState("");
@@ -62,9 +62,19 @@ function OrgRegistration() {
   function openErrorModal() {
     setErrorModal(true);
   }
-  function register() {
-    console.log("Register the Organization");
-    upload(files);
+  async function register() {
+    const token = process.env.NEXT_PUBLIC_WEB3STORAGE_API_TOKEN;
+    if (!token) {
+      return console.error(
+        "A token is needed. You can create one on https://web3.storage"
+      );
+    }
+    const storage = new Web3Storage({ token });
+
+    console.log(`Uploading ${files.length} files`);
+    const cid = await storage.put(files);
+    console.log("Content added with CID:", cid);
+
     setConfirmModal(false);
   }
 
