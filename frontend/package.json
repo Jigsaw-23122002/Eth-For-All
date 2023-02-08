@@ -9,11 +9,14 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "minimist": "^1.2.7",
     "next": "13.1.6",
     "next-themes": "^0.2.1",
+    "process": "^0.11.10",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-dropzone": "^14.2.3"
+    "react-dropzone": "^14.2.3",
+    "web3.storage": "^4.4.0"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.13",
