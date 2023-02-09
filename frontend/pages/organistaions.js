@@ -5,14 +5,14 @@ export default function organistaions({ element }) {
     const [data, setData] = useState(element);
 
     return (
-        <li className="py-3 sm:py-4 ">
-            <div className='grid gap-8 items-start justify-center '>
-                <div className="relative group ">
+        <li className="py-3 sm:py-4 w-full">
+            <div className='w-full'>
+                <div className="relative group w-auto">
                     <div className="absolute -inset-0.5 bg-gradient-to-r from-pink-600 to-purple-600 0 rounded-lg blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200">
 
 
                     </div>
-                    <button className='relative px-7 py-4 bg-black rounded-lg leading-none flex items-center divide-x divide-gray-600'>
+                    <div className='relative px-7 py-4 bg-black rounded-lg leading-none flex items-center divide-x divide-gray-600'>
 
                         <span className="flex items-center space-x-5 px-2">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6 text-pink-600">
@@ -55,7 +55,7 @@ export default function organistaions({ element }) {
                                 query: data,
                             }}>View &rarr;</Link>
                         </span>
-                    </button>
+                    </div>
                 </div>
 
             </div>

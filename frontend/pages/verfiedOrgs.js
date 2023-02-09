@@ -3,7 +3,7 @@ import React from 'react'
 export default function verfiedOrgs({ element }) {
     return (
         <div className='m-6'>
-            <div className="relative group  ">
+            <div className="relative group h-full ">
                 <div className="absolute -inset-0 bg-gradient-to-r from-blue-600 to-gray-600 0 rounded-lg blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200">
 
 
