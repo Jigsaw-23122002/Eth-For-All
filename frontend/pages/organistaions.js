@@ -12,7 +12,7 @@ export default function organistaions({ element }) {
 
 
                     </div>
-                    <div className='relative px-7 py-4 bg-black rounded-lg leading-none flex items-center divide-x divide-gray-600'>
+                    <div className='relative px-7 py-4 bg-black rounded-lg leading-none flex  divide-x divide-gray-600'>
 
                         <span className="flex items-center space-x-5 px-2">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6 text-pink-600">
@@ -21,22 +21,22 @@ export default function organistaions({ element }) {
 
 
                         </span>
-                        <span className='px-6 pl-6 text-gray-100'>
+                        <span className='px-6 pl-6 text-gray-100 flex flex-rows items-center'>
                             {element.name}                      </span>
-                        <span className='px-6  text-gray-100 grid grid-cols-2'>
-                            <div className='h-6 w-full text-lg '>{element.upVotes}</div>
+                        <span className='px-6  text-gray-100 flex flex-rows items-center'>
+                            <div className='h-6 w-full px-2 text-lg '>{element.upVotes}</div>
                             {/* <div className='h-6 w-full text-lg sm:visible'>{element.upVotes} &uarr;</div> */}
                             <div>
                                 <svg className="w-6 h-6  dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 11l3-3m0 0l3 3m-3-3v8m0-13a9 9 0 110 18 9 9 0 010-18z"></path></svg>
                             </div>
 
                         </span>
-                        <span className='px-6  text-gray-100 grid grid-cols-2'>
-                            <div className='h-6 w-full text-lg'>{element.downVotes}</div>
+                        <span className='px-6  text-gray-100 flex flex-rows items-center'>
+                            <div className='h-6 w-full px-2 text-lg'>{element.downVotes}</div>
                             <div><svg className="w-6 h-6 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 13l-3 3m0 0l-3-3m3 3V8m0 13a9 9 0 110-18 9 9 0 010 18z"></path></svg>
                             </div>
                         </span>
-                        <span className='px-6  text-gray-100 grid grid-cols-2'>
+                        <span className='px-6  text-gray-100 flex flex-rows items-center'>
                             <div className='h-6 w-full px-2 text-lg'>{element.view}</div>
                             <div className='p-1'>
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
@@ -48,7 +48,7 @@ export default function organistaions({ element }) {
 
                         </span>
 
-                        <span className='pl-6 text-indigo-400 group-hover:text-gray-100 transition duration-200 group-hover:scale-125'>
+                        <span className='flex flex-rows items-center pl-6 text-indigo-400 group-hover:text-gray-100 transition duration-200 group-hover:scale-125'>
 
                             <Link href={{
                                 pathname: '/viewDocument',
