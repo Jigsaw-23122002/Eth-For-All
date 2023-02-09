@@ -77,7 +77,9 @@ export default function verifiedOrgList() {
           <hr className="w-1/4 h-1 mx-auto my-4 bg-gray-600 border-0 rounded md:my-10 dark:bg-gray-700"></hr>
           <div className="grid lg:grid-cols-3 md:grid-cols-2">
             {orgsList.map((element) => {
-              return <VerifiedOrganisation element={element} />;
+              return (
+                <VerifiedOrganisation key={element.name} element={element} />
+              );
             })}
           </div>
         </div>
