@@ -1,6 +1,4 @@
-import Head from "next/head";
-import Image from "next/image";
-import { Navbar} from "flowbite-react";
+import { Navbar } from "flowbite-react";
 
 export default function Header() {
   return (
@@ -23,33 +21,21 @@ export default function Header() {
         <Navbar.Toggle />
         <Navbar.Collapse className="text-slate-300 ">
           <Navbar.Link href="/" className="text-slate-300 ">
-            <div className="hover:text-slate-50">
-              HOME
-            </div>
+            <div className="hover:text-slate-50">HOME</div>
           </Navbar.Link>
           <Navbar.Link href="/" className="text-slate-300 ">
-          <div className="hover:text-slate-50">
-              helloji
-            </div>
+            <div className="hover:text-slate-50">helloji</div>
           </Navbar.Link>
 
           <Navbar.Link href="/navbars" className="text-slate-300">
-          <div className="hover:text-slate-50">
-              Contact Us
-            </div>
+            <div className="hover:text-slate-50">Contact Us</div>
           </Navbar.Link>
           <Navbar.Link href="/navbars" className="text-slate-300">
-          <div className="hover:text-slate-50">
-              AboutUs
-            </div>
+            <div className="hover:text-slate-50">AboutUs</div>
           </Navbar.Link>
           <Navbar.Link href="/navbars" className="text-slate-300">
-          <div className="hover:text-slate-50">
-              SignIn
-            </div>
+            <div className="hover:text-slate-50">SignIn</div>
           </Navbar.Link>
-          
-          
         </Navbar.Collapse>
       </Navbar>
     </div>
