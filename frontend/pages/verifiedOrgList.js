@@ -14,7 +14,7 @@ export default function verifiedOrgList() {
                 <div className='grid lg:grid-cols-3 md:grid-cols-2'>
                     {
                         orgsList.map((element)=>{
-                            return <VerifiedOrganisation element={element}/>
+                            return <VerifiedOrganisation key={element.name} element={element}/>
                         })
                     }
 

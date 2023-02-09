@@ -12,7 +12,7 @@ export default function organisationList() {
                 </hr>
                 <ul className="w-full p-5">
                     {orgsList.map((element) => {
-                        return <Organisation element={element} />
+                        return <Organisation key={element.name} element={element} />
                     })}
 
 
