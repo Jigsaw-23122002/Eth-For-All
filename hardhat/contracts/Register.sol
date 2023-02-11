@@ -8,8 +8,7 @@ contract Register {
         string doc_cid;
         uint256 upvotes;
         uint256 downvotes;
-        bool verification_status;
-        
+        bool verification_status;      
         address[] upvoters;
         address[] downvoters;
         string desc;
