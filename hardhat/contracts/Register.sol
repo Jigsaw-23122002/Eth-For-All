@@ -17,7 +17,8 @@ contract Register {
 
     mapping(address => Organization) private orgIdentifier;
     mapping(address => uint256) private stake_amount;
-    mapping(address => address) voters;   
+    mapping(address => uint256) voters_to_date; 
+    mapping(uint256 => address) date_to_org;  
 
     address[] organisations;
     uint256 verified_org_cnt;
@@ -76,7 +77,7 @@ contract Register {
             "Voter organization is not verified, not permitted to vote!"
         );
         require(
-            voters[voter_addr] == org_addr,
+           date_to_org[voters_to_date[voter_addr]]  == org_addr,
             "Voter organization cannot vote more than once!"
         );
         _;
@@ -89,7 +90,8 @@ contract Register {
     ) public isValid(org_addr, voter_addr) {
         orgIdentifier[org_addr].upvotes += 1;
         orgIdentifier[org_addr].upvoters.push(voter_addr);
-        voters[voter_addr] = org_addr;
+        uint256 val_date = voters_to_date[voter_addr];
+        date_to_org[val_date] = org_addr;
         if (votingDone(org_addr, current_time)) {
             checkVerificationStatus(org_addr);
         }
@@ -102,7 +104,8 @@ contract Register {
     ) public isValid(org_addr, voter_addr) {
         orgIdentifier[org_addr].downvotes += 1;
         orgIdentifier[org_addr].downvoters.push(voter_addr);
-        voters[voter_addr] = org_addr;
+        uint256 val_date = voters_to_date[voter_addr];
+        date_to_org[val_date] = org_addr;
         if (votingDone(org_addr, current_time)) {
             checkVerificationStatus(org_addr);
         }
@@ -151,7 +154,7 @@ contract Register {
         Organization[] memory unverified_org = new Organization[](verified_org_cnt);   
         for (uint i = 0; i < len; i++) {
                 address org_addr = organisations[i];
-            if (orgIdentifier[org_addr].verification_status) {
+            if (orgIdentifier[org_addr].verification_status == false) {
                 Organization storage new_org = orgIdentifier[org_addr];
                 unverified_org[cnt] = new_org;
                 cnt+=1;
@@ -159,4 +162,5 @@ contract Register {
         }
         return unverified_org;
     }
+
 }
