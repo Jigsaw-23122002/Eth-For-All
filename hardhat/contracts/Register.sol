@@ -8,17 +8,27 @@ contract Register {
         string doc_cid;
         uint256 upvotes;
         uint256 downvotes;
-        bool verification_status;      
+        bool verification_status;
+        mapping(address => uint8) voters;
         address[] upvoters;
         address[] downvoters;
         string desc;
         uint256 application_time;
     }
 
+    struct OrgDetails {
+        address org_address;
+        string name;
+        string doc_cid;
+        uint256 upvotes;
+        uint256 downvotes;
+        bool verification_status;
+        string desc;
+        uint256 application_time;
+    }
+
     mapping(address => Organization) private orgIdentifier;
     mapping(address => uint256) private stake_amount;
-    mapping(address => uint256) voters_to_date; 
-    mapping(uint256 => address) date_to_org;  
 
     address[] organisations;
     uint256 verified_org_cnt;
@@ -38,7 +48,20 @@ contract Register {
     }
 
     function countOfViews(address org_addr) public view returns (uint256) {
-        return verified_org_cnt - countOfUpvotes(org_addr) - countOfDownvotes(org_addr);
+        return
+            verified_org_cnt -
+            countOfUpvotes(org_addr) -
+            countOfDownvotes(org_addr);
+    }
+
+    function checkIfUpvoted(address org_addr) public view returns (bool) {
+        address voter_addr = address(this);
+        return orgIdentifier[org_addr].voters[voter_addr] == 2;
+    }
+
+    function checkIfDownvoted(address org_addr) public view returns (bool) {
+        address voter_addr = address(this);
+        return orgIdentifier[org_addr].voters[voter_addr] == 1;
     }
 
     function registerOrg(
@@ -52,17 +75,17 @@ contract Register {
             orgIdentifier[organization_address].application_time == 0,
             "Organization already registered!"
         );
-        
+
         orgIdentifier[organization_address].org_address = organization_address;
         orgIdentifier[organization_address].name = organization_name;
         orgIdentifier[organization_address].doc_cid = document_cid;
         orgIdentifier[organization_address].desc = description;
         orgIdentifier[organization_address].application_time = time + 2 days;
-        
+
         organisations.push(organization_address);
     }
 
-    modifier isValid(address org_addr, address voter_addr) {
+    modifier isValid(address org_addr) {
         require(
             orgIdentifier[org_addr].application_time != 0,
             "Organization address does not exist!"
@@ -72,12 +95,12 @@ contract Register {
             "Organization already verified!"
         );
         require(
-            orgIdentifier[voter_addr].application_time != 0 &&
-                orgIdentifier[voter_addr].verification_status,
+            orgIdentifier[address(this)].application_time != 0 &&
+                orgIdentifier[address(this)].verification_status,
             "Voter organization is not verified, not permitted to vote!"
         );
         require(
-           date_to_org[voters_to_date[voter_addr]]  == org_addr,
+            !checkIfUpvoted(org_addr) && !checkIfDownvoted(org_addr),
             "Voter organization cannot vote more than once!"
         );
         _;
@@ -85,13 +108,11 @@ contract Register {
 
     function upVote(
         address org_addr,
-        address voter_addr,
         uint256 current_time
-    ) public isValid(org_addr, voter_addr) {
+    ) public isValid(org_addr) {
         orgIdentifier[org_addr].upvotes += 1;
-        orgIdentifier[org_addr].upvoters.push(voter_addr);
-        uint256 val_date = voters_to_date[voter_addr];
-        date_to_org[val_date] = org_addr;
+        orgIdentifier[org_addr].upvoters.push(address(this));
+        orgIdentifier[org_addr].voters[address(this)] = 2;
         if (votingDone(org_addr, current_time)) {
             checkVerificationStatus(org_addr);
         }
@@ -99,13 +120,11 @@ contract Register {
 
     function downVote(
         address org_addr,
-        address voter_addr,
         uint256 current_time
-    ) public isValid(org_addr, voter_addr) {
+    ) public isValid(org_addr) {
         orgIdentifier[org_addr].downvotes += 1;
-        orgIdentifier[org_addr].downvoters.push(voter_addr);
-        uint256 val_date = voters_to_date[voter_addr];
-        date_to_org[val_date] = org_addr;
+        orgIdentifier[org_addr].downvoters.push(address(this));
+        orgIdentifier[org_addr].voters[address(this)] = 1;
         if (votingDone(org_addr, current_time)) {
             checkVerificationStatus(org_addr);
         }
@@ -129,16 +148,30 @@ contract Register {
         }
     }
 
-    function verifiedOrganizationsList() public view returns (Organization[] memory ) {
-        uint len = organisations.length;
-        uint cnt = 0;
-        Organization[] memory verified_org = new Organization[](verified_org_cnt);   
-        for (uint i = 0; i < len; i++) {
-                address org_addr = organisations[i];
+    function verifiedOrganizationsList()
+        public
+        view
+        returns (OrgDetails[] memory)
+    {
+        uint256 len = organisations.length;
+        uint256 cnt = 0;
+        OrgDetails[] memory verified_org = new OrgDetails[](verified_org_cnt);
+        for (uint256 i = 0; i < len; i++) {
+            address org_addr = organisations[i];
             if (orgIdentifier[org_addr].verification_status) {
                 Organization storage new_org = orgIdentifier[org_addr];
-                verified_org[cnt] = new_org;
-                cnt+=1;
+                OrgDetails memory new_org_det = OrgDetails({
+                    org_address: new_org.org_address,
+                    name: new_org.name,
+                    doc_cid: new_org.doc_cid,
+                    upvotes: new_org.upvotes,
+                    downvotes: new_org.downvotes,
+                    verification_status: new_org.verification_status,
+                    desc: new_org.desc,
+                    application_time: new_org.application_time
+                });
+                verified_org[cnt] = new_org_det;
+                cnt += 1;
             }
         }
         return verified_org;
@@ -147,20 +180,31 @@ contract Register {
     function unverifiedOrganizationsList()
         public
         view
-        returns (Organization[] memory)
+        returns (OrgDetails[] memory)
     {
-        uint len = organisations.length;
-        uint cnt = 0;
-        Organization[] memory unverified_org = new Organization[](verified_org_cnt);   
-        for (uint i = 0; i < len; i++) {
-                address org_addr = organisations[i];
-            if (orgIdentifier[org_addr].verification_status == false) {
-                Organization storage new_org = orgIdentifier[org_addr];
+        uint256 len = organisations.length;
+        uint256 cnt = 0;
+        OrgDetails[] memory unverified_org = new OrgDetails[](
+            organisations.length - verified_org_cnt
+        );
+        for (uint256 i = 0; i < len; i++) {
+            address org_addr = organisations[i];
+            if (!orgIdentifier[org_addr].verification_status) {
+                OrgDetails memory new_org = OrgDetails({
+                    org_address: orgIdentifier[org_addr].org_address,
+                    name: orgIdentifier[org_addr].name,
+                    doc_cid: orgIdentifier[org_addr].doc_cid,
+                    upvotes: orgIdentifier[org_addr].upvotes,
+                    downvotes: orgIdentifier[org_addr].downvotes,
+                    verification_status: orgIdentifier[org_addr]
+                        .verification_status,
+                    desc: orgIdentifier[org_addr].desc,
+                    application_time: orgIdentifier[org_addr].application_time
+                });
                 unverified_org[cnt] = new_org;
-                cnt+=1;
+                cnt += 1;
             }
         }
         return unverified_org;
     }
-
 }
