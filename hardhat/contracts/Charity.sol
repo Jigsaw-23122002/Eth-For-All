@@ -17,6 +17,7 @@ contract Charity {
         string desc;
         uint256 application_time;
     }
+
     address[] organizationAddress;
 
     mapping(address => Organization) private orgIdentifier;
@@ -252,6 +253,30 @@ contract Charity {
             temp[orgIdentifier[org_address].downvoters[i]] = false;
         }
     }
+
+    //
+    struct Violation {
+        address org_address;
+        string doc_cid;
+        string desc;
+        uint256 upvotes;
+        uint256 downvotes;
+        address[] upvoters;
+        address[] downvoters;
+        uint256 number;
+        bool isOpen;
+        mapping(address => uint256) voters;
+    }
+
+    Violation[] violationsArray;
+
+    function registerViolation(
+        address organization_address,
+        string memory document_cid,
+        string memory description
+    ) public {}
+
+    function violationUpVotes(uint256 index) public {}
 }
 
 // Algorithm
