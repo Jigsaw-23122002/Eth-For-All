@@ -15,6 +15,7 @@ contract Charity {
         address[] downvoters;
         uint256 stake;
         string desc;
+        uint256 points;
         uint256 application_time;
     }
 
@@ -158,6 +159,10 @@ contract Charity {
         if (category) {
             uint256 sum = 0;
             for (uint256 i = 0; i < orgIdentifier[org_address].upvotes; i++) {
+                orgIdentifier[orgIdentifier[org_address].upvoters[i]].points =
+                    orgIdentifier[orgIdentifier[org_address].upvoters[i]]
+                        .points +
+                    1;
                 sum = sum + stakeToBeDistrubited;
                 transfer(
                     address(this),
@@ -168,9 +173,19 @@ contract Charity {
             orgIdentifier[org_address].stake =
                 orgIdentifier[org_address].stake -
                 sum;
+            for (uint256 i = 0; i < orgIdentifier[org_address].downvotes; i++) {
+                orgIdentifier[orgIdentifier[org_address].downvoters[i]].points =
+                    orgIdentifier[orgIdentifier[org_address].downvoters[i]]
+                        .points -
+                    1;
+            }
         } else {
             uint256 sum = 0;
             for (uint256 i = 0; i < orgIdentifier[org_address].downvotes; i++) {
+                orgIdentifier[orgIdentifier[org_address].downvoters[i]].points =
+                    orgIdentifier[orgIdentifier[org_address].downvoters[i]]
+                        .points +
+                    1;
                 sum = sum + stakeToBeDistrubited;
                 transfer(
                     address(this),
@@ -181,6 +196,12 @@ contract Charity {
             orgIdentifier[org_address].stake =
                 orgIdentifier[org_address].stake -
                 sum;
+            for (uint256 i = 0; i < orgIdentifier[org_address].upvotes; i++) {
+                orgIdentifier[orgIdentifier[org_address].upvoters[i]].points =
+                    orgIdentifier[orgIdentifier[org_address].upvoters[i]]
+                        .points -
+                    1;
+            }
         }
     }
 
@@ -235,7 +256,8 @@ contract Charity {
     }
 
     function emptyNotVotedArray(address org_address) public {
-        for (uint256 i = 0; i < notVotedAddress.length; i++) {
+        uint256 loopTime = notVotedAddress.length;
+        for (uint256 i = 0; i < loopTime; i++) {
             notVotedAddress.pop();
         }
         for (
@@ -265,18 +287,236 @@ contract Charity {
         address[] downvoters;
         uint256 number;
         bool isOpen;
+        uint256 start_time;
+        uint256 end_time;
+        bool isViolated;
         mapping(address => uint256) voters;
     }
 
-    Violation[] violationsArray;
+    uint256 registeredViolations = 0;
+    mapping(address => Violation) violationMap;
 
     function registerViolation(
         address organization_address,
         string memory document_cid,
-        string memory description
-    ) public {}
+        string memory description,
+        uint256 registration_time
+    ) public {
+        violationMap[organization_address].org_address = organization_address;
+        violationMap[organization_address].doc_cid = document_cid;
+        violationMap[organization_address].desc = description;
+        violationMap[organization_address].start_time = registration_time;
+        violationMap[organization_address].end_time =
+            registration_time +
+            5 days;
 
-    function violationUpVotes(uint256 index) public {}
+        registeredViolations = registeredViolations + 1;
+    }
+
+    function violationUpVote(address org_address) public {
+        violationMap[org_address].upvotes =
+            violationMap[org_address].upvotes +
+            1;
+        violationMap[org_address].upvoters.push(msg.sender);
+    }
+
+    // On time expire for violation -
+    // 1) checkViolationStatus
+    // 2) upvotedOnVerify
+    // 3) RemoveCharityIfFraud(org_address);
+
+    function violationDownVote(address org_address) public {
+        violationMap[org_address].downvotes =
+            violationMap[org_address].downvotes +
+            1;
+        violationMap[org_address].downvoters.push(msg.sender);
+    }
+
+    function checkViolationStatus(address org_address) public {
+        uint256 totalVotes = violationMap[org_address].upvotes +
+            violationMap[org_address].downvotes;
+        if (violationMap[org_address].upvotes * 100 >= totalVotes * 51) {
+            violationMap[org_address].isViolated = true;
+        } else {
+            violationMap[org_address].isViolated = false;
+        }
+    }
+
+    function upvotedOnVerify(address org_address) public {
+        if (violationMap[org_address].isViolated) {
+            for (
+                uint256 i = 0;
+                i < orgIdentifier[org_address].upvoters.length;
+                i++
+            ) {
+                orgIdentifier[orgIdentifier[org_address].upvoters[i]].stake =
+                    orgIdentifier[orgIdentifier[org_address].upvoters[i]]
+                        .stake -
+                    stakeToBeDistrubited;
+            }
+            for (
+                uint256 i = 0;
+                i < orgIdentifier[org_address].downvoters.length;
+                i++
+            ) {
+                orgIdentifier[orgIdentifier[org_address].downvoters[i]].stake =
+                    orgIdentifier[orgIdentifier[org_address].downvoters[i]]
+                        .stake +
+                    stakeToBeDistrubited;
+            }
+        }
+    }
+
+    address[] maxPointAddress;
+
+    function RemoveCharityIfFraud(address org_address) public {
+        if (violationMap[org_address].isViolated == true) {
+            orgIdentifier[org_address].verification_status = false;
+            totalOrganizations -= 1;
+            verifiedOrgMap[org_address] = false;
+            uint256 maxPoints;
+
+            for (uint256 i = 0; i < organizationAddress.length; i++) {
+                if (
+                    orgIdentifier[organizationAddress[i]].verification_status &&
+                    maxPoints < orgIdentifier[organizationAddress[i]].points
+                ) {
+                    maxPoints = orgIdentifier[organizationAddress[i]].points;
+                    maxPointAddress.push(organizationAddress[i]);
+                }
+            }
+            uint256 amountToBeDistributed = orgIdentifier[org_address].stake /
+                maxPointAddress.length;
+
+            for (uint256 i = 0; i < maxPointAddress.length; i++) {
+                donate(
+                    address(this),
+                    maxPointAddress[i],
+                    amountToBeDistributed
+                );
+            }
+
+            uint256 loopTime = maxPointAddress.length;
+            for (uint256 i = 0; i < loopTime; i++) {
+                maxPointAddress.pop();
+            }
+        }
+    }
+
+    struct FinancialReport {
+        address org_address;
+        uint256 upvotes;
+        uint256 downvotes;
+        address[] upvoters;
+        address[] downvoters;
+        uint256 reportUploadStartTime;
+        uint256 reportUploadEndTime;
+        bool isReportTrue;
+        string[] cid;
+    }
+    mapping(address => FinancialReport) financialReportMap;
+
+    function registerFinancialReport(
+        address org_address,
+        string memory cid,
+        uint256 registration_time
+    ) public {
+        financialReportMap[org_address].org_address = org_address;
+        financialReportMap[org_address].cid.push(cid);
+        financialReportMap[org_address]
+            .reportUploadStartTime = registration_time;
+        financialReportMap[org_address].reportUploadEndTime =
+            registration_time +
+            5 days;
+    }
+
+    // On time expire for violation -
+    // 1) checkFinancialReportStatus
+    // 2) upvotedOnFinancialReport
+    // 3) RemoveCharityIfFinancialReportFraud(org_address);
+
+    function reportUpVote(address org_address) public {
+        financialReportMap[org_address].upvotes =
+            financialReportMap[org_address].upvotes +
+            1;
+        financialReportMap[org_address].upvoters.push(msg.sender);
+    }
+
+    function reportsDownVote(address org_address) public {
+        financialReportMap[org_address].downvotes =
+            financialReportMap[org_address].downvotes +
+            1;
+        financialReportMap[org_address].downvoters.push(msg.sender);
+    }
+
+    function checkFinancialReportStatus(address org_address) public {
+        uint256 totalVotes = financialReportMap[org_address].upvotes +
+            financialReportMap[org_address].downvotes;
+        if (financialReportMap[org_address].upvotes * 100 >= totalVotes * 51) {
+            financialReportMap[org_address].isReportTrue = true;
+        } else {
+            financialReportMap[org_address].isReportTrue = false;
+        }
+    }
+
+    function upvotedOnFinancialReport(address org_address) public {
+        if (financialReportMap[org_address].isReportTrue == false) {
+            for (
+                uint256 i = 0;
+                i < orgIdentifier[org_address].upvoters.length;
+                i++
+            ) {
+                orgIdentifier[orgIdentifier[org_address].upvoters[i]].stake =
+                    orgIdentifier[orgIdentifier[org_address].upvoters[i]]
+                        .stake -
+                    stakeToBeDistrubited;
+            }
+            for (
+                uint256 i = 0;
+                i < orgIdentifier[org_address].downvoters.length;
+                i++
+            ) {
+                orgIdentifier[orgIdentifier[org_address].downvoters[i]].stake =
+                    orgIdentifier[orgIdentifier[org_address].downvoters[i]]
+                        .stake +
+                    stakeToBeDistrubited;
+            }
+        }
+    }
+
+    function RemoveCharityIfFinancialReportFraud(address org_address) public {
+        if (financialReportMap[org_address].isReportTrue == false) {
+            orgIdentifier[org_address].verification_status = false;
+            totalOrganizations -= 1;
+            verifiedOrgMap[org_address] = false;
+            uint256 maxPoints;
+
+            for (uint256 i = 0; i < organizationAddress.length; i++) {
+                if (
+                    orgIdentifier[organizationAddress[i]].verification_status &&
+                    maxPoints < orgIdentifier[organizationAddress[i]].points
+                ) {
+                    maxPoints = orgIdentifier[organizationAddress[i]].points;
+                    maxPointAddress.push(organizationAddress[i]);
+                }
+            }
+            uint256 amountToBeDistributed = orgIdentifier[org_address].stake /
+                maxPointAddress.length;
+
+            for (uint256 i = 0; i < maxPointAddress.length; i++) {
+                donate(
+                    address(this),
+                    maxPointAddress[i],
+                    amountToBeDistributed
+                );
+            }
+
+            uint256 loopTime = maxPointAddress.length;
+            for (uint256 i = 0; i < loopTime; i++) {
+                maxPointAddress.pop();
+            }
+        }
+    }
 }
 
 // Algorithm
