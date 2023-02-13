@@ -1,4 +1,4 @@
-import { React, useState, useRef, useEffect } from 'react'
+import { React, useState, useRef, useEffect,useContext } from 'react'
 import 'flowbite'
 import Organisation from './organistaions.js'
 import Web3Modal from "web3modal";
@@ -6,14 +6,15 @@ import { providers, Contract } from "ethers";
 import { REGISTER_CONTRACT_ADDRESS, abi } from '../constants/index.js';
 
 export default function organisationList() {
-    const [orgsList, setorgsList] = useState([{ cid: 'bafybeigo3t5tj5cop433hlyszxndw6tar3bgficashpv5iwh7hqkqwpbpy', upVotes: 26, downVotes: 5, view: 56, name: 'Alexander S. Onassis Foundation' }, { cid: 'bafybeigo3t5tj5cop433hlyszxndw6tar3bgficashpv5iwh7hqkqwpbpy', upVotes: 26, downVotes: 5, view: 56, name: 'The Alliance' }, { cid: 'bafybeigo3t5tj5cop433hlyszxndw6tar3bgficashpv5iwh7hqkqwpbpy', upVotes: 26, downVotes: 5, view: 56, name: 'Asbestos Disease Awareness Organization' }, { cid: 'bafybeigo3t5tj5cop433hlyszxndw6tar3bgficashpv5iwh7hqkqwpbpy', upVotes: 26, downVotes: 5, view: 56, name: 'Cardiac Risk in the Young' }, { cid: 'bafybeigo3t5tj5cop433hlyszxndw6tar3bgficashpv5iwh7hqkqwpbpy', upVotes: 26, downVotes: 5, view: 56, name: 'The Crohn\'s and Colitis Foundation of Canada' }, { cid: 'bafybeigo3t5tj5cop433hlyszxndw6tar3bgficashpv5iwh7hqkqwpbpy', upVotes: 26, downVotes: 5, view: 56, name: 'Global Village Foundation' }, { cid: 'bafybeigo3t5tj5cop433hlyszxndw6tar3bgficashpv5iwh7hqkqwpbpy', upVotes: 26, downVotes: 5, view: 56, name: 'International Republican Institute' }, { cid: 'bafybeigo3t5tj5cop433hlyszxndw6tar3bgficashpv5iwh7hqkqwpbpy', upVotes: 26, downVotes: 5, view: 56, name: 'Ratanak International' }, { cid: 'bafybeigo3t5tj5cop433hlyszxndw6tar3bgficashpv5iwh7hqkqwpbpy', upVotes: 26, downVotes: 5, view: 56, name: 'Realdania' }])
+    const [orgsList, setorgsList] = useState([])
+    // const [orgsList, setorgsList] = useState([{ doc_cid: 'bafybeigo3t5tj5cop433hlyszxndw6tar3bgficashpv5iwh7hqkqwpbpy', upvotes: 26, downvotes: 5, view: 56, name: 'Alexander S. Onassis Foundation' }, { doc_cid: 'bafybeigo3t5tj5cop433hlyszxndw6tar3bgficashpv5iwh7hqkqwpbpy', upvotes: 26, downvotes: 5, view: 56, name: 'The Alliance' }, { doc_cid: 'bafybeigo3t5tj5cop433hlyszxndw6tar3bgficashpv5iwh7hqkqwpbpy', upvotes: 26, downvotes: 5, view: 56, name: 'Asbestos Disease Awareness Organization' }, { doc_cid: 'bafybeigo3t5tj5cop433hlyszxndw6tar3bgficashpv5iwh7hqkqwpbpy', upvotes: 26, downvotes: 5, view: 56, name: 'Cardiac Risk in the Young' }, { doc_cid: 'bafybeigo3t5tj5cop433hlyszxndw6tar3bgficashpv5iwh7hqkqwpbpy', upvotes: 26, downvotes: 5, view: 56, name: 'The Crohn\'s and Colitis Foundation of Canada' }, { doc_cid: 'bafybeigo3t5tj5cop433hlyszxndw6tar3bgficashpv5iwh7hqkqwpbpy', upvotes: 26, downvotes: 5, view: 56, name: 'Global Village Foundation' }, { doc_cid: 'bafybeigo3t5tj5cop433hlyszxndw6tar3bgficashpv5iwh7hqkqwpbpy', upvotes: 26, downvotes: 5, view: 56, name: 'International Republican Institute' }, { doc_cid: 'bafybeigo3t5tj5cop433hlyszxndw6tar3bgficashpv5iwh7hqkqwpbpy', upvotes: 26, downvotes: 5, view: 56, name: 'Ratanak International' }, { doc_cid: 'bafybeigo3t5tj5cop433hlyszxndw6tar3bgficashpv5iwh7hqkqwpbpy', upvotes: 26, downvotes: 5, view: 56, name: 'Realdania' }])
     const [loading, setLoading] = useState(false);
+    
     const web3ModalRef = useRef();
     const [walletConnected, setWalletConnected] = useState(false);
 
     const getProviderOrSigner = async (needSigner) => {
-        console.log(REGISTER_CONTRACT_ADDRESS);
-        console.log(abi);
+       
         const provider = await web3ModalRef.current.connect();
         const web3Provider = new providers.Web3Provider(provider);
 
@@ -37,7 +38,6 @@ export default function organisationList() {
             const regContract = new Contract(REGISTER_CONTRACT_ADDRESS, abi, signer);
             const unverifiedOrgs = await regContract.unverifiedOrganizationsList();
             // setLoading(true);
-
             console.log(unverifiedOrgs);
             setorgsList(unverifiedOrgs);
 
@@ -45,6 +45,25 @@ export default function organisationList() {
             console.error(error);
         }
     }
+
+    const getReg = async () => {
+        try {
+            const signer = await getProviderOrSigner(true);
+            const regContract = new Contract(REGISTER_CONTRACT_ADDRESS, abi, signer);
+            console.log("Inside the contract methods")
+            const today = new Date();
+            const timeNow = Math.floor((today.getTime()) / 1000);
+            console.log(timeNow);
+            const getregistered = await regContract.registerOrg("0x4A9CF09B996F0Ddf5498201f1D6cb8f6C88e3e0e", "Alexander S.  ", "bafybeigo3t5tj5cop433hlyszxndw6tar3bgficashpv5iwh7hqkqwpbpy", 'Unfortunately, factors outside of anyone’s control make it hard for some people to reach their potential: things like when they were born, who their parents are, where they grew up, whether they are a boy or a girl.We wake up every day determined to use our resources to create a world where everyone has the opportunity to lead a healthy and productive life. Most importantly, we believe this: All lives have equal value.', timeNow);
+            console.log("Completed reg")
+            const unverifiedOrgDet = await getSetOfUnverifiedOrgs();
+            console.log("Done reg")
+
+        } catch (error) {
+
+        }
+    }
+
     const connectWallet = async () => {
         try {
             await getProviderOrSigner(false);
@@ -59,7 +78,12 @@ export default function organisationList() {
     const renderButton = () => {
         if (walletConnected) {
 
-            return (<button className='bg-white' onClick={getSetOfUnverifiedOrgs}>Done.</button>);
+            return (<>
+                <button className='bg-white' onClick={getReg}>Reg Org.</button>
+                <button className='bg-white' onClick={getSetOfUnverifiedOrgs}>Unverified Orgs.</button>
+            </>
+
+            );
 
         }
         else if (loading) {
@@ -73,6 +97,7 @@ export default function organisationList() {
             );
         }
     };
+    
     useEffect(() => {
         if (!walletConnected) {
             web3ModalRef.current = new Web3Modal({
