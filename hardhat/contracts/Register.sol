@@ -18,7 +18,8 @@ contract Register {
     mapping(address => Organization) private orgIdentifier;
     mapping(address => uint256) private stake_amount;
     mapping(address => uint256) voters_to_date; 
-    mapping(uint256 => address) date_to_org;  
+    mapping(uint256 => address) date_to_org; 
+    // <addr,addr>  => map  address => bool
 
     address[] organisations;
     uint256 verified_org_cnt;
@@ -62,7 +63,7 @@ contract Register {
         organisations.push(organization_address);
     }
 
-    modifier isValid(address org_addr, address voter_addr) {
+    modifier isValid(address org_addr) {
         require(
             orgIdentifier[org_addr].application_time != 0,
             "Organization address does not exist!"
@@ -72,12 +73,12 @@ contract Register {
             "Organization already verified!"
         );
         require(
-            orgIdentifier[voter_addr].application_time != 0 &&
-                orgIdentifier[voter_addr].verification_status,
+            orgIdentifier[address(this)].application_time != 0 &&
+                orgIdentifier[address(this)].verification_status,
             "Voter organization is not verified, not permitted to vote!"
         );
         require(
-           date_to_org[voters_to_date[voter_addr]]  == org_addr,
+           date_to_org[voters_to_date[address(this)]]  == org_addr,
             "Voter organization cannot vote more than once!"
         );
         _;
@@ -85,12 +86,12 @@ contract Register {
 
     function upVote(
         address org_addr,
-        address voter_addr,
+        
         uint256 current_time
-    ) public isValid(org_addr, voter_addr) {
+    ) public isValid(org_addr) {
         orgIdentifier[org_addr].upvotes += 1;
-        orgIdentifier[org_addr].upvoters.push(voter_addr);
-        uint256 val_date = voters_to_date[voter_addr];
+        orgIdentifier[org_addr].upvoters.push(address(this));
+        uint256 val_date = voters_to_date[address(this)];
         date_to_org[val_date] = org_addr;
         if (votingDone(org_addr, current_time)) {
             checkVerificationStatus(org_addr);
@@ -99,12 +100,12 @@ contract Register {
 
     function downVote(
         address org_addr,
-        address voter_addr,
+        
         uint256 current_time
-    ) public isValid(org_addr, voter_addr) {
+    ) public isValid(org_addr) {
         orgIdentifier[org_addr].downvotes += 1;
-        orgIdentifier[org_addr].downvoters.push(voter_addr);
-        uint256 val_date = voters_to_date[voter_addr];
+        orgIdentifier[org_addr].downvoters.push(address(this));
+        uint256 val_date = voters_to_date[address(this)];
         date_to_org[val_date] = org_addr;
         if (votingDone(org_addr, current_time)) {
             checkVerificationStatus(org_addr);
@@ -154,7 +155,7 @@ contract Register {
         Organization[] memory unverified_org = new Organization[](verified_org_cnt);   
         for (uint i = 0; i < len; i++) {
                 address org_addr = organisations[i];
-            if (orgIdentifier[org_addr].verification_status == false) {
+            if (!orgIdentifier[org_addr].verification_status ) {
                 Organization storage new_org = orgIdentifier[org_addr];
                 unverified_org[cnt] = new_org;
                 cnt+=1;
@@ -162,5 +163,6 @@ contract Register {
         }
         return unverified_org;
     }
+    
 
 }
