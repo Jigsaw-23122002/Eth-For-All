@@ -46,7 +46,7 @@ contract Charity {
     }
 
     mapping(address => Organization) private orgIdentifier;
-    mapping(address => mapping(address => bool)) voters;
+    mapping(address => mapping(address => uint256)) voters;
     mapping(address => bool) verifiedOrgMap;
     mapping(address => bool) temp;
     mapping(address => Violation) violationMap;
@@ -55,10 +55,96 @@ contract Charity {
     address[] organizationAddress;
     address[] notVotedAddress;
     address[] maxPointAddress;
+    address public admin;
 
     uint256 public totalOrganizations;
     uint256 stakeToBeDistributed = 5 * 10**17;
     uint256 registeredViolations = 0;
+
+    Organization[] listOrganizations;
+
+    constructor() {
+        admin = msg.sender;
+    }
+
+    // GENERAL FUNCTIONS OF THE CONTRACT
+
+    // This function returns the count of upvotes done for verfying the organization.
+    function countOfUpvotes(address org_addr) public view returns (uint256) {
+        return orgIdentifier[org_addr].upvotes;
+    }
+
+    // This function returns the count of downvotes done for verifying the organization.
+    function countOfDownvotes(address org_addr) public view returns (uint256) {
+        return orgIdentifier[org_addr].downvotes;
+    }
+
+    function countOfViews(address org_addr) public view returns (uint256) {
+        return
+            totalOrganizations -
+            countOfUpvotes(org_addr) -
+            countOfDownvotes(org_addr);
+    }
+
+    // Function to check whether the caller has upvoted or not.
+    function checkIfUpvoted(address org_address) public view returns (bool) {
+        return voters[org_address][msg.sender] == 1;
+    }
+
+    // Function to check whether the caller has downvoted or not.
+    function checkIfDownvoted(address org_address) public view returns (bool) {
+        return voters[org_address][msg.sender] == 2;
+    }
+
+    //Function to check whether the time of voting for the registered organizations is finish or not.
+    function votingDone(address org_address, uint256 current_time)
+        public
+        view
+        returns (bool)
+    {
+        if (orgIdentifier[org_address].application_time < current_time) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    // Function used to return the list of all the verified organization onto the website.
+    function verifiedOrganizationsList()
+        public
+        returns (Organization[] memory)
+    {
+        for (uint256 i = 0; i < organizationAddress.length; i++) {
+            if (orgIdentifier[organizationAddress[i]].verification_status) {
+                listOrganizations.push(orgIdentifier[organizationAddress[i]]);
+            }
+        }
+        return listOrganizations;
+    }
+
+    // Function to return the list of all the un verifiied orgnization onto the website.
+    function unverifiedOrganizationsList()
+        public
+        returns (Organization[] memory)
+    {
+        for (uint256 i = 0; i < organizationAddress.length; i++) {
+            if (
+                orgIdentifier[organizationAddress[i]].verification_status ==
+                false
+            ) {
+                listOrganizations.push(orgIdentifier[organizationAddress[i]]);
+            }
+        }
+        return listOrganizations;
+    }
+
+    // Function to empty the listOrganization global array variable.
+    function emptyListOrganization() public {
+        uint256 timeLoop = listOrganizations.length;
+        for (uint256 i = 0; i < timeLoop; i++) {
+            listOrganizations.pop();
+        }
+    }
 
     modifier isValid(address org_address, address voter_address) {
         require(
@@ -75,7 +161,7 @@ contract Charity {
             "Voter organization is not verified, not permitted to vote!"
         );
         require(
-            voters[org_address][voter_address] == false,
+            voters[org_address][voter_address] == 0,
             "Voter organization cannot vote more than once!"
         );
         _;
@@ -124,7 +210,7 @@ contract Charity {
     ) public isValid(org_address, voter_address) returns (bool) {
         orgIdentifier[org_address].upvotes += 1;
         orgIdentifier[org_address].upvoters.push(voter_address);
-        voters[org_address][voter_address] = true;
+        voters[org_address][voter_address] = 1;
         if (orgIdentifier[org_address].application_time < current_time) {
             return true;
         } else {
@@ -140,7 +226,7 @@ contract Charity {
     ) public isValid(org_address, voter_address) returns (bool) {
         orgIdentifier[org_address].downvotes += 1;
         orgIdentifier[org_address].downvoters.push(voter_address);
-        voters[org_address][voter_address] = true;
+        voters[org_address][voter_address] = 2;
         if (orgIdentifier[org_address].application_time < current_time) {
             return true;
         } else {
@@ -515,38 +601,3 @@ contract Charity {
         }
     }
 }
-
-// Algorithm
-// time of registration = 1400 (12.00 pm)
-// 12 hrs adds 1000 to system time.
-// means 1 day = 2000 system time increase.
-// limit = 5400
-// 6400
-// Novotes->stake cut.
-
-// Calling sequence from frontend for verification for upvote:
-// 1) upVote();
-// 2) checkVerificationStatus(org_address, category);
-// 3) transferToContract(org_address, category);
-// 4) markAsVerified(org_address);
-
-// Calling sequence from frontend for verification for upvote:
-// 1) downVote();
-// 2) checkVerificationStatus(org_address, category);
-// 3) transferToContract(org_address, category);
-// 4) markAsVerified(org_address);
-
-// Calling Sequence from frontend using cron job for the organizations failed to vote:
-// 1) notVoted();
-// 2) cutStakeOfNotVoted();
-// 3) emptyNotVotedArray();
-
-// On time expire for violation -
-// 1) checkViolationStatus
-// 2) upvotedOnVerify
-// 3) RemoveCharityIfFraud(org_address);
-
-// On time expire for Financial report verification per -d
-//    1) checkFinancialReportStatus
-//    2) upvotedOnFinancialReport
-//    3) RemoveCharityIfFinancialReportFraud(org_address);
