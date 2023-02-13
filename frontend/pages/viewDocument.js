@@ -45,9 +45,9 @@ export default function viewDocument() {
         const newVotes = await voteContract.countOfUpvotes(query.org_address);
         setorg_upvotes(newVotes);
     }
-  
     
     const fileName = "220225_NOTICE-for-Re-opening-Hostels.pdf"
+    
     return (
         <div className='bg-black flex flex-col items-center '>
 
