@@ -16,9 +16,11 @@ contract Charity {
         uint256 points;
         uint256 application_time;
         bool isStakePaid;
+        bool decision;
     }
 
     struct Violation {
+        uint256 id;
         address org_address;
         string doc_cid;
         string desc;
@@ -26,12 +28,10 @@ contract Charity {
         uint256 downvotes;
         address[] upvoters;
         address[] downvoters;
-        uint256 number;
         bool isOpen;
         uint256 start_time;
         uint256 end_time;
         bool isViolated;
-        mapping(address => uint256) voters;
     }
 
     struct FinancialReport {
@@ -43,46 +43,52 @@ contract Charity {
         uint256 reportUploadStartTime;
         uint256 reportUploadEndTime;
         bool isReportTrue;
-        string[] cid;
+        string report_cid;
+        bool isOpen;
+        bool isSubmitted;
     }
 
     mapping(address => Organization) private orgIdentifier;
     mapping(address => mapping(address => uint256)) voters;
+    mapping(uint256 => mapping(address => uint256)) violation_voters;
+    mapping(address => mapping(address => uint256)) financial_report_voters;
     mapping(address => bool) verifiedOrgMap;
     mapping(address => bool) temp;
-    mapping(address => Violation) violationMap;
+    mapping(uint256 => Violation) violationMap;
     mapping(address => FinancialReport) financialReportMap;
 
     address[] organizationAddress;
     address[] notVotedAddress;
     address[] maxPointAddress;
+    address[] finishedVotes;
+    uint256[] finishedViolationVotes;
+    address[] financialReportsAddress;
+    address[] notSubmitFRAddress;
     address public admin;
 
     uint256 public totalOrganizations;
-    uint256 stakeToBeDistributed = 5 * 10**17;
-    uint256 registeredViolations = 0;
+    uint256 stakeToBeDistributed;
+    uint256 registeredViolations;
 
     Organization[] listOrganizations;
+    FinancialReport[] listFinancialReports;
 
     constructor() {
         admin = msg.sender;
+        stakeToBeDistributed = 5 * 10**17;
+        registeredViolations = 0;
     }
 
     // GENERAL FUNCTIONS OF THE CONTRACT
 
     // Function to check whether the organization is verfied or not.
-    function isVerified() public returns (bool) {
-        return orgIdentifier[msg.sender].verification_status;
-    }
-
-    // Function to check whether the organization has staked its ethers or not.
-    function isStaked() public returns (bool) {
+    function isVerified() public view returns (bool) {
         return orgIdentifier[msg.sender].isStakePaid;
     }
 
-    // Function to change the status of isStakePaid.
-    function changeIsStakedPaid() public {
-        orgIdentifier[msg.sender].isStakePaid = true;
+    // Function to check whether the organization has staked its ethers or not.
+    function isStaked() public view returns (bool) {
+        return orgIdentifier[msg.sender].isStakePaid;
     }
 
     // This function returns the count of upvotes done for verfying the organization.
@@ -131,7 +137,10 @@ contract Charity {
         returns (Organization[] memory)
     {
         for (uint256 i = 0; i < organizationAddress.length; i++) {
-            if (orgIdentifier[organizationAddress[i]].verification_status) {
+            if (
+                orgIdentifier[organizationAddress[i]].verification_status &&
+                orgIdentifier[organizationAddress[i]].isStakePaid
+            ) {
                 listOrganizations.push(orgIdentifier[organizationAddress[i]]);
             }
         }
@@ -144,10 +153,7 @@ contract Charity {
         returns (Organization[] memory)
     {
         for (uint256 i = 0; i < organizationAddress.length; i++) {
-            if (
-                orgIdentifier[organizationAddress[i]].verification_status ==
-                false
-            ) {
+            if (orgIdentifier[organizationAddress[i]].isStakePaid == false) {
                 listOrganizations.push(orgIdentifier[organizationAddress[i]]);
             }
         }
@@ -329,15 +335,54 @@ contract Charity {
         }
     }
 
+    function setVerificationStatus(address org_address) public {
+        if (
+            orgIdentifier[org_address].upvotes * 100 >= totalOrganizations * 51
+        ) {
+            orgIdentifier[org_address].verification_status = true;
+        } else {
+            orgIdentifier[org_address].verification_status = false;
+            distributeStake(org_address, false);
+        }
+    }
+
+    // Function to change the status of isStakePaid and add the organization into the list of verified organization.
+    function changeStakePaid() public {
+        orgIdentifier[msg.sender].isStakePaid = true;
+        distributeStake(msg.sender, true);
+        markAsVerified(msg.sender);
+    }
+
     // Function to put the organization into the verified list. This has to be called after the stake is paid.
     function markAsVerified(address org_address) public {
-        orgIdentifier[org_address].verification_status = true;
         totalOrganizations += 1;
         verifiedOrgMap[org_address] = true;
     }
 
+    // Function used to get all the organizations whose time of voting expired.
+    function cronJobsForVotes() public returns (address[] memory) {
+        for (uint256 i = 0; i < organizationAddress.length; i++) {
+            if (
+                orgIdentifier[organizationAddress[i]].decision == false &&
+                orgIdentifier[organizationAddress[i]].application_time <
+                block.timestamp
+            ) {
+                finishedVotes.push(organizationAddress[i]);
+            }
+        }
+        return finishedVotes;
+    }
+
+    // Function used to empty the finishedVotes array.
+    function emptyFinishedVotes() public {
+        uint256 timeLoop = finishedVotes.length;
+        for (uint256 i = 0; i < timeLoop; i++) {
+            finishedVotes.pop();
+        }
+    }
+
     // Function to be called when the time of voting for organization verification is over using cron job(assumption).
-    function notVoted(address org_address) public returns (address[] memory) {
+    function notVoted(address org_address) public {
         for (
             uint256 i = 0;
             i < orgIdentifier[org_address].upvoters.length;
@@ -358,8 +403,6 @@ contract Charity {
                 notVotedAddress.push(organizationAddress[i]);
             }
         }
-
-        return notVotedAddress;
     }
 
     // Function used to cut the stake of the organzizations failed to vote for verification/
@@ -414,47 +457,68 @@ contract Charity {
         string memory description,
         uint256 registration_time
     ) public {
-        violationMap[organization_address].org_address = organization_address;
-        violationMap[organization_address].doc_cid = document_cid;
-        violationMap[organization_address].desc = description;
-        violationMap[organization_address].start_time = registration_time;
-        violationMap[organization_address].end_time =
-            registration_time +
-            5 days;
+        Violation memory vio;
 
+        vio.id = registeredViolations;
+        vio.org_address = organization_address;
+        vio.doc_cid = document_cid;
+        vio.desc = description;
+        vio.start_time = registration_time;
+        vio.end_time = registration_time + 5 days;
+        vio.isOpen = true;
+
+        violationMap[registeredViolations] = vio;
         registeredViolations = registeredViolations + 1;
     }
 
     // Function used for upvoting the violations of the organization.
-    function violationUpVote(address org_address) public {
-        violationMap[org_address].upvotes =
-            violationMap[org_address].upvotes +
-            1;
-        violationMap[org_address].upvoters.push(msg.sender);
+    function violationUpVote(uint256 index) public {
+        violationMap[index].upvotes = violationMap[index].upvotes + 1;
+        violationMap[index].upvoters.push(msg.sender);
+        violation_voters[index][msg.sender] = 1;
     }
 
     // Function used for downvoting the violations of the organization.
-    function violationDownVote(address org_address) public {
-        violationMap[org_address].downvotes =
-            violationMap[org_address].downvotes +
-            1;
-        violationMap[org_address].downvoters.push(msg.sender);
+    function violationDownVote(uint256 index) public {
+        violationMap[index].downvotes = violationMap[index].downvotes + 1;
+        violationMap[index].downvoters.push(msg.sender);
+        violation_voters[index][msg.sender] = 2;
     }
 
-    // Function to be called once the voting period of violation is finished.
-    function checkViolationStatus(address org_address) public {
-        uint256 totalVotes = violationMap[org_address].upvotes +
-            violationMap[org_address].downvotes;
-        if (violationMap[org_address].upvotes * 100 >= totalVotes * 51) {
-            violationMap[org_address].isViolated = true;
-        } else {
-            violationMap[org_address].isViolated = false;
+    // Function used to return the array of the violations whose time for voting is over.
+    function finishedViolationVoting() public returns (uint256[] memory) {
+        for (uint256 i = 0; i < registeredViolations; i++) {
+            if (violationMap[i].end_time < block.timestamp) {
+                finishedViolationVotes.push(i);
+            }
+        }
+        return finishedViolationVotes;
+    }
+
+    // Function to empty the finishedViolationVotes array.
+    function emptyFinishedViolationVotes() public {
+        uint256 timeLoop = finishedViolationVotes.length;
+        for (uint256 i = 0; i < timeLoop; i++) {
+            finishedViolationVotes.pop();
         }
     }
 
-    // ******** Function to be called to transfer the stake back to the owners after violation status is checked.
-    function upvotedOnVerify(address org_address) public {
-        if (violationMap[org_address].isViolated) {
+    // Function to be called once the voting period of violation is finished.
+    function setViolationStatus(uint256 index) public {
+        uint256 totalVotes = violationMap[index].upvotes +
+            violationMap[index].downvotes;
+        if (violationMap[index].upvotes * 100 >= totalVotes * 51) {
+            violationMap[index].isViolated = true;
+        } else {
+            violationMap[index].isViolated = false;
+        }
+        violationMap[index].isOpen = false;
+    }
+
+    // Function to be called to transfer the stake back to the owners after violation status is checked.
+    function upvotedOnVerify(uint256 index) public {
+        address org_address = violationMap[index].org_address;
+        if (violationMap[index].isViolated) {
             for (
                 uint256 i = 0;
                 i < orgIdentifier[org_address].upvoters.length;
@@ -464,6 +528,10 @@ contract Charity {
                     orgIdentifier[orgIdentifier[org_address].upvoters[i]]
                         .stake -
                     stakeToBeDistributed;
+                orgIdentifier[orgIdentifier[org_address].upvoters[i]].points =
+                    orgIdentifier[orgIdentifier[org_address].upvoters[i]]
+                        .points -
+                    1;
             }
             for (
                 uint256 i = 0;
@@ -474,16 +542,23 @@ contract Charity {
                     orgIdentifier[orgIdentifier[org_address].downvoters[i]]
                         .stake +
                     stakeToBeDistributed;
+                orgIdentifier[orgIdentifier[org_address].downvoters[i]].points =
+                    orgIdentifier[orgIdentifier[org_address].downvoters[i]]
+                        .points +
+                    1;
             }
         }
     }
 
     // Function to be called when the organization is correctly verified for violating rules and donating its stake to the organizations having most points.
-    function RemoveCharityIfFraud(address org_address) public {
-        if (violationMap[org_address].isViolated == true) {
+    function RemoveCharityIfFraud(uint256 index) public {
+        address org_address = violationMap[index].org_address;
+        if (violationMap[index].isViolated == true) {
             orgIdentifier[org_address].verification_status = false;
+            orgIdentifier[org_address].isStakePaid = false;
             totalOrganizations -= 1;
             verifiedOrgMap[org_address] = false;
+
             uint256 maxPoints;
 
             for (uint256 i = 0; i < organizationAddress.length; i++) {
@@ -500,6 +575,9 @@ contract Charity {
 
             for (uint256 i = 0; i < maxPointAddress.length; i++) {
                 // donate the money from the contract to the organizations with max points shortlisted.
+                orgIdentifier[maxPointAddress[i]].stake =
+                    orgIdentifier[maxPointAddress[i]].stake +
+                    amountToBeDistributed;
             }
 
             uint256 loopTime = maxPointAddress.length;
@@ -510,6 +588,8 @@ contract Charity {
     }
 
     // FUNCTIONS FOR FINANCIAL REPORTS OF THE ORGANIZATIONS.
+    // Assuming the time for all the companies will be same that is at the year end.
+    // So there is no need to have the different end times.
 
     // Function for registering the financial reports of the organizations.
     function registerFinancialReport(
@@ -517,13 +597,16 @@ contract Charity {
         string memory cid,
         uint256 registration_time
     ) public {
-        financialReportMap[org_address].org_address = org_address;
-        financialReportMap[org_address].cid.push(cid);
-        financialReportMap[org_address]
-            .reportUploadStartTime = registration_time;
-        financialReportMap[org_address].reportUploadEndTime =
-            registration_time +
-            5 days;
+        FinancialReport memory finRep;
+
+        finRep.org_address = org_address;
+        finRep.report_cid = cid;
+        finRep.reportUploadStartTime = registration_time;
+        finRep.reportUploadEndTime = registration_time + 5 days;
+        finRep.isSubmitted = false;
+
+        financialReportMap[org_address] = finRep;
+        financialReportsAddress.push(org_address);
     }
 
     // Function used for upvoting the financial reports of the organizations.
@@ -532,6 +615,7 @@ contract Charity {
             financialReportMap[org_address].upvotes +
             1;
         financialReportMap[org_address].upvoters.push(msg.sender);
+        financial_report_voters[org_address][msg.sender] = 1;
     }
 
     // Function used for downnvoting the financial reports of the organizations.
@@ -540,10 +624,55 @@ contract Charity {
             financialReportMap[org_address].downvotes +
             1;
         financialReportMap[org_address].downvoters.push(msg.sender);
+        financial_report_voters[org_address][msg.sender] = 2;
+    }
+
+    // Function to return the list of all the submissions of the financial reports.
+    function getFinancialReports() public returns (FinancialReport[] memory) {
+        for (uint256 i = 0; i < financialReportsAddress.length; i++) {
+            listFinancialReports.push(
+                financialReportMap[financialReportsAddress[i]]
+            );
+        }
+        return listFinancialReports;
+    }
+
+    // Function to empty the listFinancialReports array
+    function emptyListFinancialReports() public {
+        uint256 timeLoop = listFinancialReports.length;
+        for (uint256 i = 0; i < timeLoop; i++) {
+            listFinancialReports.pop();
+        }
+    }
+
+    // Function to get the list of the Orgs that submitted the financial reports.
+    function getSubmittedFROrgs() public view returns (address[] memory) {
+        return financialReportsAddress;
+    }
+
+    // Function to get the list of the Orgs failed to submit the financial reports.
+    function getUnsubmittedFROrgs() public returns (address[] memory) {
+        for (uint256 i = 0; i < organizationAddress.length; i++) {
+            if (
+                orgIdentifier[organizationAddress[i]].isStakePaid == true &&
+                financialReportMap[organizationAddress[i]].isSubmitted == false
+            ) {
+                notSubmitFRAddress.push(organizationAddress[i]);
+            }
+        }
+        return notSubmitFRAddress;
+    }
+
+    // Function to empty notSubmitFRAddress array.
+    function emptyNotSubmitFRAddress() public {
+        uint256 timeLoop = notSubmitFRAddress.length;
+        for (uint256 i = 0; i < timeLoop; i++) {
+            notSubmitFRAddress.pop();
+        }
     }
 
     // Function to be called once the time for voting of financial reports are over.
-    function checkFinancialReportStatus(address org_address) public {
+    function setFinancialReportStatus(address org_address) public {
         uint256 totalVotes = financialReportMap[org_address].upvotes +
             financialReportMap[org_address].downvotes;
         if (financialReportMap[org_address].upvotes * 100 >= totalVotes * 51) {
@@ -553,7 +682,7 @@ contract Charity {
         }
     }
 
-    // ******** Function to be called to transfer the stake back to the owners after vfraud status is checked.
+    // Function to be called to transfer the stake back to the owners after fraud status is checked.
     function upvotedOnFinancialReport(address org_address) public {
         if (financialReportMap[org_address].isReportTrue == false) {
             for (
@@ -565,6 +694,10 @@ contract Charity {
                     orgIdentifier[orgIdentifier[org_address].upvoters[i]]
                         .stake -
                     stakeToBeDistributed;
+                orgIdentifier[orgIdentifier[org_address].upvoters[i]].points =
+                    orgIdentifier[orgIdentifier[org_address].upvoters[i]]
+                        .points -
+                    1;
             }
             for (
                 uint256 i = 0;
@@ -575,6 +708,10 @@ contract Charity {
                     orgIdentifier[orgIdentifier[org_address].downvoters[i]]
                         .stake +
                     stakeToBeDistributed;
+                orgIdentifier[orgIdentifier[org_address].downvoters[i]].points =
+                    orgIdentifier[orgIdentifier[org_address].downvoters[i]]
+                        .points +
+                    1;
             }
         }
     }
@@ -583,6 +720,7 @@ contract Charity {
     function RemoveCharityIfFinancialReportFraud(address org_address) public {
         if (financialReportMap[org_address].isReportTrue == false) {
             orgIdentifier[org_address].verification_status = false;
+            orgIdentifier[org_address].isStakePaid = false;
             totalOrganizations -= 1;
             verifiedOrgMap[org_address] = false;
             uint256 maxPoints;
@@ -601,6 +739,9 @@ contract Charity {
 
             for (uint256 i = 0; i < maxPointAddress.length; i++) {
                 // donate the money from the contract to the organizations with max points shortlisted.
+                orgIdentifier[maxPointAddress[i]].stake =
+                    orgIdentifier[maxPointAddress[i]].stake +
+                    amountToBeDistributed;
             }
 
             uint256 loopTime = maxPointAddress.length;
@@ -610,9 +751,45 @@ contract Charity {
         }
     }
 
-    // Function to receive Ether. msg.data must be empty
-    receive() external payable {}
-
-    // Fallback function is called when msg.data is not empty
-    fallback() external payable {}
+    // Function used for empty financialReportAddress array.
+    function emptyFinancialReportAddress() public {
+        uint256 timeLoop = financialReportsAddress.length;
+        for (uint256 i = 0; i < timeLoop; i++) {
+            financialReportsAddress.pop();
+        }
+    }
 }
+
+// Algorithm
+// time of registration = 1400 (12.00 pm)
+// 12 hrs adds 1000 to system time.
+// means 1 day = 2000 system time increase.
+// limit = 5400
+// 6400
+
+// Calling sequence from frontend for verification for upvote:
+// 1) upVote();
+// 2) checkVerificationStatus(org_address, category);
+// 3) transferToContract(org_address, category);
+// 4) markAsVerified(org_address);
+
+// Calling sequence from frontend for verification for upvote:
+// 1) downVote();
+// 2) checkVerificationStatus(org_address, category);
+// 3) transferToContract(org_address, category);
+// 4) markAsVerified(org_address);
+
+// Calling Sequence from frontend using cron job for the organizations failed to vote:
+// 1) notVoted();
+// 2) cutStakeOfNotVoted();
+// 3) emptyNotVotedArray();
+
+// On time expire for violation -
+// 1) checkViolationStatus
+// 2) upvotedOnVerify
+// 3) RemoveCharityIfFraud(org_address);
+
+// On time expire for Financial report verification per -d
+//    1) checkFinancialReportStatus
+//    2) upvotedOnFinancialReport
+//    3) RemoveCharityIfFinancialReportFraud(org_address);
