@@ -76,17 +76,12 @@ contract Charity {
 
     // Function to check whether the organization is verfied or not.
     function isVerified() public view returns (bool) {
-        return orgIdentifier[msg.sender].verification_status;
+        return orgIdentifier[msg.sender].isStakePaid;
     }
 
     // Function to check whether the organization has staked its ethers or not.
     function isStaked() public view returns (bool) {
         return orgIdentifier[msg.sender].isStakePaid;
-    }
-
-    // Function to change the status of isStakePaid.
-    function changeIsStakedPaid() public {
-        orgIdentifier[msg.sender].isStakePaid = true;
     }
 
     // This function returns the count of upvotes done for verfying the organization.
@@ -135,7 +130,10 @@ contract Charity {
         returns (Organization[] memory)
     {
         for (uint256 i = 0; i < organizationAddress.length; i++) {
-            if (orgIdentifier[organizationAddress[i]].verification_status) {
+            if (
+                orgIdentifier[organizationAddress[i]].verification_status &&
+                orgIdentifier[organizationAddress[i]].isStakePaid
+            ) {
                 listOrganizations.push(orgIdentifier[organizationAddress[i]]);
             }
         }
@@ -148,10 +146,7 @@ contract Charity {
         returns (Organization[] memory)
     {
         for (uint256 i = 0; i < organizationAddress.length; i++) {
-            if (
-                orgIdentifier[organizationAddress[i]].verification_status ==
-                false
-            ) {
+            if (orgIdentifier[organizationAddress[i]].isStakePaid == false) {
                 listOrganizations.push(orgIdentifier[organizationAddress[i]]);
             }
         }
@@ -333,9 +328,26 @@ contract Charity {
         }
     }
 
+    function setVerificationStatus(address org_address) public {
+        if (
+            orgIdentifier[org_address].upvotes * 100 >= totalOrganizations * 51
+        ) {
+            orgIdentifier[org_address].verification_status = true;
+        } else {
+            orgIdentifier[org_address].verification_status = false;
+            distributeStake(org_address, false);
+        }
+    }
+
+    // Function to change the status of isStakePaid and add the organization into the list of verified organization.
+    function changeStakePaid() public {
+        orgIdentifier[msg.sender].isStakePaid = true;
+        distributeStake(msg.sender, true);
+        markAsVerified(msg.sender);
+    }
+
     // Function to put the organization into the verified list. This has to be called after the stake is paid.
     function markAsVerified(address org_address) public {
-        orgIdentifier[org_address].verification_status = true;
         totalOrganizations += 1;
         verifiedOrgMap[org_address] = true;
     }
@@ -363,7 +375,7 @@ contract Charity {
     }
 
     // Function to be called when the time of voting for organization verification is over using cron job(assumption).
-    function notVoted(address org_address) public returns (address[] memory) {
+    function notVoted(address org_address) public {
         for (
             uint256 i = 0;
             i < orgIdentifier[org_address].upvoters.length;
@@ -384,8 +396,6 @@ contract Charity {
                 notVotedAddress.push(organizationAddress[i]);
             }
         }
-
-        return notVotedAddress;
     }
 
     // Function used to cut the stake of the organzizations failed to vote for verification/

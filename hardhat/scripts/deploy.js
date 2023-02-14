@@ -20,25 +20,17 @@
 //   });
 
 const { ethers } = require("hardhat");
+require("dotenv").config({ path: ".env" });
 
 async function main() {
   const charityContract = await ethers.getContractFactory("Charity");
-
-  const deployedcharityContract = await charityContract.deploy();
-
-  await deployedcharityContract.deployed();
-
-  console.log(
-    "Deployed Charity Contract Address",
-    deployedCharityContract.address
-  );
+  const deployedCharityContract = await charityContract.deploy();
+  await deployedCharityContract.deployed();
+  console.log("Charity Contract Address : ", deployedCharityContract.address);
 }
-
 main()
-  .then(() => {
-    process.exit(0);
-  })
+  .then(() => process.exit(0))
   .catch((error) => {
-    console.log(error);
+    console.error(error);
     process.exit(1);
   });
