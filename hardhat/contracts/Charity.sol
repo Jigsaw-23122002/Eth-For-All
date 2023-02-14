@@ -64,7 +64,7 @@ contract Charity {
 
     Organization[] listOrganizations;
 
-    function intialize() public {
+    constructor() {
         admin = msg.sender;
         stakeToBeDistributed = 5 * 10**17;
         registeredViolations = 0;

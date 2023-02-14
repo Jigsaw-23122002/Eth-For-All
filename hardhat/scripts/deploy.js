@@ -1,15 +1,37 @@
-const { ethers, upgrades } = require("hardhat");
+// const { ethers } = require("hardhat");
+
+// async function main() {
+//   const whiteListContract = await ethers.getContractFactory("Charity");
+
+//   const deployedWhiteListContract = await whiteListContract.deploy();
+
+//   await deployedWhiteListContract.deployed();
+
+//   console.log("Charity Contract Address", deployedWhiteListContract.address);
+// }
+
+// main()
+//   .then(() => {
+//     process.exit(0);
+//   })
+//   .catch((error) => {
+//     console.log(error);
+//     process.exit(1);
+//   });
+
+const { ethers } = require("hardhat");
 
 async function main() {
-  console.log("starting to deploy the contract");
-  const Charity = await ethers.getContractFactory("Charity");
-  console.log("contract loaded ");
+  const charityContract = await ethers.getContractFactory("Charity");
 
-  const charity = await upgrades.deployProxy(Charity);
-  console.log("instance of contract created to deploy");
+  const deployedcharityContract = await charityContract.deploy();
 
-  await charity.deployed();
-  console.log("Charity Contract deployed on address : ", charity.address);
+  await deployedcharityContract.deployed();
+
+  console.log(
+    "Deployed Charity Contract Address",
+    deployedCharityContract.address
+  );
 }
 
 main()
