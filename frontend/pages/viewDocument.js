@@ -4,7 +4,6 @@ import Web3Modal from "web3modal";
 import { providers, Contract } from "ethers";
 import { REGISTER_CONTRACT_ADDRESS, abi } from '../constants/index.js';
 
-
 export default function viewDocument() {
     const router = useRouter();
     const query = router.query;
@@ -50,7 +49,7 @@ export default function viewDocument() {
     }
     
     const fileName = "220225_NOTICE-for-Re-opening-Hostels.pdf"
-
+    
     return (
         <div className='bg-black flex flex-col items-center '>
 
