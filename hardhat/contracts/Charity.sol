@@ -16,6 +16,7 @@ contract Charity {
         uint256 points;
         uint256 application_time;
         bool isStakePaid;
+        bool decision;
     }
 
     struct Violation {
@@ -56,6 +57,7 @@ contract Charity {
     address[] organizationAddress;
     address[] notVotedAddress;
     address[] maxPointAddress;
+    address[] finishedVotes;
     address public admin;
 
     uint256 public totalOrganizations;
@@ -338,6 +340,28 @@ contract Charity {
         verifiedOrgMap[org_address] = true;
     }
 
+    // Function used to get all the organizations whose time of voting expired.
+    function cronJobsForVotes() public returns (address[] memory) {
+        for (uint256 i = 0; i < organizationAddress.length; i++) {
+            if (
+                orgIdentifier[organizationAddress[i]].decision == false &&
+                orgIdentifier[organizationAddress[i]].application_time <
+                block.timestamp
+            ) {
+                finishedVotes.push(organizationAddress[i]);
+            }
+        }
+        return finishedVotes;
+    }
+
+    // Function used to empty the finishedVotes array.
+    function emptyFinishedVotes() public {
+        uint256 timeLoop = finishedVotes.length;
+        for (uint256 i = 0; i < timeLoop; i++) {
+            finishedVotes.pop();
+        }
+    }
+
     // Function to be called when the time of voting for organization verification is over using cron job(assumption).
     function notVoted(address org_address) public returns (address[] memory) {
         for (
@@ -502,6 +526,9 @@ contract Charity {
 
             for (uint256 i = 0; i < maxPointAddress.length; i++) {
                 // donate the money from the contract to the organizations with max points shortlisted.
+                orgIdentifier[maxPointAddress[i]].stake =
+                    orgIdentifier[maxPointAddress[i]].stake +
+                    amountToBeDistributed;
             }
 
             uint256 loopTime = maxPointAddress.length;
@@ -603,6 +630,9 @@ contract Charity {
 
             for (uint256 i = 0; i < maxPointAddress.length; i++) {
                 // donate the money from the contract to the organizations with max points shortlisted.
+                orgIdentifier[maxPointAddress[i]].stake =
+                    orgIdentifier[maxPointAddress[i]].stake +
+                    amountToBeDistributed;
             }
 
             uint256 loopTime = maxPointAddress.length;
