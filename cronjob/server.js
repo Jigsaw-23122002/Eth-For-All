@@ -19,7 +19,7 @@ setInterval(async () => {
     await contract.methods.emptyNotVotedArray();
   }
   await contract.methods.emptyFinishedVotes();
-}, 5000);
+}, 8640000);
 
 setInterval(async () => {
   const web3 = new Web3(ALCHEMY_RPC_URL);
@@ -33,7 +33,7 @@ setInterval(async () => {
     await contract.methods.RemoveCharityIfFraud(finishedViolationVotes[i]);
   }
   await contract.methods.emptyFinishedViolationVotes();
-}, 5000);
+}, 8640000);
 
 setInterval(async () => {
   const web3 = new Web3(ALCHEMY_RPC_URL);
@@ -48,4 +48,4 @@ setInterval(async () => {
     );
   }
   await contract.methods.emptyFinancialReportAddress();
-}, 5000);
+}, 8640000 * 365);
