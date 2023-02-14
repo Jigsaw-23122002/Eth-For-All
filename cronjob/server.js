@@ -1,9 +1,14 @@
+require("dotenv").config();
 const Web3 = require("web3");
 const {
   ALCHEMY_RPC_URL,
   CONTRACT_ADDRESS,
   CONTRACT_ABI,
 } = require("./constants/index");
+
+const express = require("express");
+const app = express();
+const PORT = process.env.PORT || 3000;
 
 setInterval(async () => {
   const web3 = new Web3(ALCHEMY_RPC_URL);
@@ -48,4 +53,12 @@ setInterval(async () => {
     );
   }
   await contract.methods.emptyFinancialReportAddress();
-}, 8640000 * 365);
+}, 8640000);
+
+app.listen(PORT, (error) => {
+  if (!error)
+    console.log(
+      "Server is Successfully Running, and App is listening on port " + PORT
+    );
+  else console.log("Error occurred, server can't start", error);
+});
