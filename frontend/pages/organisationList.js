@@ -37,7 +37,7 @@ export default function organisationList() {
         try {
             const signer = await getProviderOrSigner(true);
             const regContract = new Contract(REGISTER_CONTRACT_ADDRESS, abi, signer);
-            const unverifiedOrgs = await regContract.unverifiedOrganizationsList();
+            const unverifiedOrgs = await regContract.verifiedOrganizationsList();
             // setLoading(true);
             console.log(unverifiedOrgs);
             setorgsList(unverifiedOrgs);

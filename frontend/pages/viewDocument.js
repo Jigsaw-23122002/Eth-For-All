@@ -49,7 +49,7 @@ export default function viewDocument() {
     }
 
     const fileName = "220225_NOTICE-for-Re-opening-Hostels.pdf"
-
+    // https://bafybeigo3t5tj5cop433hlyszxndw6tar3bgficashpv5iwh7hqkqwpbpy.ipfs.w3s.link/
     return (
         <div className='bg-black flex flex-col items-center '>
 
