@@ -11,17 +11,17 @@ export default function viewDocument() {
     const [org_upvotes, setorg_upvotes] = useState(query.upvotes)
     const web3ModalRef = useRef();
     // const setNetwork = ()=>{
-    //     web3ModalRef.current = new Web3Modal({
-    //         network: "goerli",
-    //         providerOptions: {},
-    //         disableInjectedProvider: false,
-    //     });
+
     // }
     // window.setNetwork();
     const [walletConnected, setWalletConnected] = useState(false);
 
     const getProviderOrSigner = async (needSigner) => {
-
+        web3ModalRef.current = new Web3Modal({
+            network: "goerli",
+            providerOptions: {},
+            disableInjectedProvider: false,
+        });
         const provider = await web3ModalRef.current.connect();
         const web3Provider = new providers.Web3Provider(provider);
 
@@ -43,13 +43,13 @@ export default function viewDocument() {
         const timeNow = Math.floor((today.getTime()) / 1000);
         const signer = await getProviderOrSigner(true);
         const voteContract = new Contract(REGISTER_CONTRACT_ADDRESS, abi, signer);
-        await voteContract.upVote(query.org_address,timeNow);
+        await voteContract.upVote(query.org_address, timeNow);
         const newVotes = await voteContract.countOfUpvotes(query.org_address);
         setorg_upvotes(newVotes);
     }
-    
+
     const fileName = "220225_NOTICE-for-Re-opening-Hostels.pdf"
-    
+
     return (
         <div className='bg-black flex flex-col items-center '>
 

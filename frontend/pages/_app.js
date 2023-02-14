@@ -7,7 +7,7 @@ export const envData = {
   }
 function MyApp({ Component, pageProps }) {
   return (<>
-    <MoralisProvider appId={envData.appId} serverUrl={envData.serverUrl}>
+    <MoralisProvider initializeOnMount={false}>
       <Component {...pageProps} />
     </MoralisProvider>
   </>);
