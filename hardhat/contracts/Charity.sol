@@ -601,3 +601,37 @@ contract Charity {
         }
     }
 }
+
+// Algorithm
+// time of registration = 1400 (12.00 pm)
+// 12 hrs adds 1000 to system time.
+// means 1 day = 2000 system time increase.
+// limit = 5400
+// 6400
+
+// Calling sequence from frontend for verification for upvote:
+// 1) upVote();
+// 2) checkVerificationStatus(org_address, category);
+// 3) transferToContract(org_address, category);
+// 4) markAsVerified(org_address);
+
+// Calling sequence from frontend for verification for upvote:
+// 1) downVote();
+// 2) checkVerificationStatus(org_address, category);
+// 3) transferToContract(org_address, category);
+// 4) markAsVerified(org_address);
+
+// Calling Sequence from frontend using cron job for the organizations failed to vote:
+// 1) notVoted();
+// 2) cutStakeOfNotVoted();
+// 3) emptyNotVotedArray();
+
+// On time expire for violation -
+// 1) checkViolationStatus
+// 2) upvotedOnVerify
+// 3) RemoveCharityIfFraud(org_address);
+
+// On time expire for Financial report verification per -d
+//    1) checkFinancialReportStatus
+//    2) upvotedOnFinancialReport
+//    3) RemoveCharityIfFinancialReportFraud(org_address);
