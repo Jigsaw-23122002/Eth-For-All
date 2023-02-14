@@ -499,11 +499,7 @@ contract Charity {
                 maxPointAddress.length;
 
             for (uint256 i = 0; i < maxPointAddress.length; i++) {
-                donate(
-                    address(this),
-                    maxPointAddress[i],
-                    amountToBeDistributed
-                );
+                // donate the money from the contract to the organizations with max points shortlisted.
             }
 
             uint256 loopTime = maxPointAddress.length;
@@ -604,11 +600,7 @@ contract Charity {
                 maxPointAddress.length;
 
             for (uint256 i = 0; i < maxPointAddress.length; i++) {
-                donate(
-                    address(this),
-                    maxPointAddress[i],
-                    amountToBeDistributed
-                );
+                // donate the money from the contract to the organizations with max points shortlisted.
             }
 
             uint256 loopTime = maxPointAddress.length;
