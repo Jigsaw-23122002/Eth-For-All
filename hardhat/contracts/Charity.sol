@@ -397,13 +397,13 @@ contract Charity {
 
     // THIS FUNCTION WILL BE IN THE FRONTEND.
     // Function for the user to donate the eth to the organizations.
-    function donate(
-        address donor_address,
-        address org_address,
-        uint256 amount
-    ) public {
-        transfer(donor_address, org_address, amount);
-    }
+    // function donate(
+    //     address donor_address,
+    //     address org_address,
+    //     uint256 amount
+    // ) public {
+    //     transfer(donor_address, org_address, amount);
+    // }
 
     // FUNCTIONS OF VIOLATIONS
 
@@ -499,11 +499,11 @@ contract Charity {
                 maxPointAddress.length;
 
             for (uint256 i = 0; i < maxPointAddress.length; i++) {
-                donate(
-                    address(this),
-                    maxPointAddress[i],
-                    amountToBeDistributed
-                );
+                // donate(
+                //     address(this),
+                //     maxPointAddress[i],
+                //     amountToBeDistributed
+                // );
             }
 
             uint256 loopTime = maxPointAddress.length;
@@ -604,11 +604,11 @@ contract Charity {
                 maxPointAddress.length;
 
             for (uint256 i = 0; i < maxPointAddress.length; i++) {
-                donate(
-                    address(this),
-                    maxPointAddress[i],
-                    amountToBeDistributed
-                );
+                // donate(
+                //     address(this),
+                //     maxPointAddress[i],
+                //     amountToBeDistributed
+                // );
             }
 
             uint256 loopTime = maxPointAddress.length;
