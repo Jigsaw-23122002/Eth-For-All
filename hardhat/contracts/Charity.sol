@@ -59,24 +59,26 @@ contract Charity {
     address public admin;
 
     uint256 public totalOrganizations;
-    uint256 stakeToBeDistributed = 5 * 10**17;
-    uint256 registeredViolations = 0;
+    uint256 stakeToBeDistributed;
+    uint256 registeredViolations;
 
     Organization[] listOrganizations;
 
-    constructor() {
+    function intialize() public {
         admin = msg.sender;
+        stakeToBeDistributed = 5 * 10**17;
+        registeredViolations = 0;
     }
 
     // GENERAL FUNCTIONS OF THE CONTRACT
 
     // Function to check whether the organization is verfied or not.
-    function isVerified() public returns (bool) {
+    function isVerified() public view returns (bool) {
         return orgIdentifier[msg.sender].verification_status;
     }
 
     // Function to check whether the organization has staked its ethers or not.
-    function isStaked() public returns (bool) {
+    function isStaked() public view returns (bool) {
         return orgIdentifier[msg.sender].isStakePaid;
     }
 
@@ -499,11 +501,7 @@ contract Charity {
                 maxPointAddress.length;
 
             for (uint256 i = 0; i < maxPointAddress.length; i++) {
-                // donate(
-                //     address(this),
-                //     maxPointAddress[i],
-                //     amountToBeDistributed
-                // );
+                // donate the money from the contract to the organizations with max points shortlisted.
             }
 
             uint256 loopTime = maxPointAddress.length;
@@ -604,11 +602,7 @@ contract Charity {
                 maxPointAddress.length;
 
             for (uint256 i = 0; i < maxPointAddress.length; i++) {
-                // donate(
-                //     address(this),
-                //     maxPointAddress[i],
-                //     amountToBeDistributed
-                // );
+                // donate the money from the contract to the organizations with max points shortlisted.
             }
 
             uint256 loopTime = maxPointAddress.length;

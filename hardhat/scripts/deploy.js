@@ -1,12 +1,15 @@
-// scripts/deploy_upgradeable_box.js
 const { ethers, upgrades } = require("hardhat");
 
 async function main() {
-  const CharityContract = await ethers.getContractFactory("Charity");
-  console.log("Deploying Charity...");
-  const deployedCharityContract = await upgrades.deployProxy(CharityContract, [42], { initializer: "store" });
-  await deployedCharityContract.deployed();
-  console.log("Charity Contract deployed to:", deployedCharityContract.address);
+  console.log("starting to deploy the contract");
+  const Charity = await ethers.getContractFactory("Charity");
+  console.log("contract loaded ");
+
+  const charity = await upgrades.deployProxy(Charity);
+  console.log("instance of contract created to deploy");
+
+  await charity.deployed();
+  console.log("Charity Contract deployed on address : ", charity.address);
 }
 
 main()
