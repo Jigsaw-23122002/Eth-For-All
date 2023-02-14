@@ -1,4 +1,4 @@
-import { React, useState, useRef, useEffect,useContext } from 'react'
+import { React, useState, useRef, useEffect, useContext } from 'react'
 import 'flowbite'
 import Organisation from './organistaions.js'
 import Web3Modal from "web3modal";
@@ -10,12 +10,12 @@ export default function organisationList() {
     const [orgsList, setorgsList] = useState([])
     // const [orgsList, setorgsList] = useState([{ doc_cid: 'bafybeigo3t5tj5cop433hlyszxndw6tar3bgficashpv5iwh7hqkqwpbpy', upvotes: 26, downvotes: 5, view: 56, name: 'Alexander S. Onassis Foundation' }, { doc_cid: 'bafybeigo3t5tj5cop433hlyszxndw6tar3bgficashpv5iwh7hqkqwpbpy', upvotes: 26, downvotes: 5, view: 56, name: 'The Alliance' }, { doc_cid: 'bafybeigo3t5tj5cop433hlyszxndw6tar3bgficashpv5iwh7hqkqwpbpy', upvotes: 26, downvotes: 5, view: 56, name: 'Asbestos Disease Awareness Organization' }, { doc_cid: 'bafybeigo3t5tj5cop433hlyszxndw6tar3bgficashpv5iwh7hqkqwpbpy', upvotes: 26, downvotes: 5, view: 56, name: 'Cardiac Risk in the Young' }, { doc_cid: 'bafybeigo3t5tj5cop433hlyszxndw6tar3bgficashpv5iwh7hqkqwpbpy', upvotes: 26, downvotes: 5, view: 56, name: 'The Crohn\'s and Colitis Foundation of Canada' }, { doc_cid: 'bafybeigo3t5tj5cop433hlyszxndw6tar3bgficashpv5iwh7hqkqwpbpy', upvotes: 26, downvotes: 5, view: 56, name: 'Global Village Foundation' }, { doc_cid: 'bafybeigo3t5tj5cop433hlyszxndw6tar3bgficashpv5iwh7hqkqwpbpy', upvotes: 26, downvotes: 5, view: 56, name: 'International Republican Institute' }, { doc_cid: 'bafybeigo3t5tj5cop433hlyszxndw6tar3bgficashpv5iwh7hqkqwpbpy', upvotes: 26, downvotes: 5, view: 56, name: 'Ratanak International' }, { doc_cid: 'bafybeigo3t5tj5cop433hlyszxndw6tar3bgficashpv5iwh7hqkqwpbpy', upvotes: 26, downvotes: 5, view: 56, name: 'Realdania' }])
     const [loading, setLoading] = useState(false);
-    
+
     const web3ModalRef = useRef();
     const [walletConnected, setWalletConnected] = useState(false);
 
     const getProviderOrSigner = async (needSigner) => {
-       
+
         const provider = await web3ModalRef.current.connect();
         const web3Provider = new providers.Web3Provider(provider);
 
@@ -49,7 +49,7 @@ export default function organisationList() {
 
     const getReg = async () => {
         try {
-            const signer = await getProviderOrSigner(true);
+            const  signer = await getProviderOrSigner(true);
             const regContract = new Contract(REGISTER_CONTRACT_ADDRESS, abi, signer);
             console.log("Inside the contract methods")
             const today = new Date();
@@ -93,7 +93,7 @@ export default function organisationList() {
             );
         }
     };
-    
+
     useEffect(() => {
         if (!walletConnected) {
             web3ModalRef.current = new Web3Modal({
