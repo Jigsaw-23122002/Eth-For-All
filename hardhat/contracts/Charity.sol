@@ -15,6 +15,7 @@ contract Charity {
         string desc;
         uint256 points;
         uint256 application_time;
+        bool isStakePaid;
     }
 
     struct Violation {
@@ -68,6 +69,21 @@ contract Charity {
     }
 
     // GENERAL FUNCTIONS OF THE CONTRACT
+
+    // Function to check whether the organization is verfied or not.
+    function isVerified() public returns (bool) {
+        return orgIdentifier[msg.sender].verification_status;
+    }
+
+    // Function to check whether the organization has staked its ethers or not.
+    function isStaked() public returns (bool) {
+        return orgIdentifier[msg.sender].isStakePaid;
+    }
+
+    // Function to change the status of isStakePaid.
+    function changeIsStakedPaid() public {
+        orgIdentifier[msg.sender].isStakePaid = true;
+    }
 
     // This function returns the count of upvotes done for verfying the organization.
     function countOfUpvotes(address org_addr) public view returns (uint256) {
@@ -167,13 +183,12 @@ contract Charity {
         _;
     }
 
-    function transfer(
-        address from,
-        address to,
-        uint256 value
-    ) public returns (bool) {
-        return true;
-    }
+    // THIS FUNCTION WILL BE IN THE FRONTEND.
+    // function transfer(
+    //     address from,
+    //     address to,
+    //     uint256 value
+    // ) public returns (bool) {}
 
     // FUNCTIONS OF ORGANIZATIONS
 
@@ -248,21 +263,22 @@ contract Charity {
         return (false, category);
     }
 
+    // THIS FUNCTION WILL BE IN THE FRONTEND.
     // This Function transfers all the stake into the contract.
-    function transferStakeToContract(address org_address, bool category)
-        public
-        returns (bool)
-    {
-        bool status = transfer(
-            org_address,
-            address(this),
-            orgIdentifier[org_address].stake
-        );
-        if (status) {
-            distributeStake(org_address, category);
-        }
-        return status;
-    }
+    // function transferStakeToContract(address org_address, bool category)
+    //     public
+    //     returns (bool)
+    // {
+    //     bool status = transfer(
+    //         org_address,
+    //         address(this),
+    //         orgIdentifier[org_address].stake
+    //     );
+    //     if (status) {
+    //         distributeStake(org_address, category);
+    //     }
+    //     return status;
+    // }
 
     // Function to distribute the stake to the companies in favour.
     function distributeStake(address org_address, bool category) public {
@@ -313,7 +329,7 @@ contract Charity {
         }
     }
 
-    // Function to put the organization into the verified list.
+    // Function to put the organization into the verified list. This has to be called after the stake is paid.
     function markAsVerified(address org_address) public {
         orgIdentifier[org_address].verification_status = true;
         totalOrganizations += 1;
@@ -379,6 +395,7 @@ contract Charity {
 
     // FUNCTIONS FOR DONARS
 
+    // THIS FUNCTION WILL BE IN THE FRONTEND.
     // Function for the user to donate the eth to the organizations.
     function donate(
         address donor_address,
@@ -600,6 +617,12 @@ contract Charity {
             }
         }
     }
+
+    // Function to receive Ether. msg.data must be empty
+    receive() external payable {}
+
+    // Fallback function is called when msg.data is not empty
+    fallback() external payable {}
 }
 
 // Algorithm
