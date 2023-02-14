@@ -4,6 +4,7 @@ import Organisation from './organistaions.js'
 import Web3Modal from "web3modal";
 import { providers, Contract } from "ethers";
 import { REGISTER_CONTRACT_ADDRESS, abi } from '../constants/index.js';
+import { ConnectButton } from '@web3uikit/web3';
 
 export default function organisationList() {
     const [orgsList, setorgsList] = useState([])
@@ -54,7 +55,7 @@ export default function organisationList() {
             const today = new Date();
             const timeNow = Math.floor((today.getTime()) / 1000);
             console.log(timeNow);
-            const getregistered = await regContract.registerOrg("0x4A9CF09B996F0Ddf5498201f1D6cb8f6C88e3e0e", "Alexander S.  ", "bafybeigo3t5tj5cop433hlyszxndw6tar3bgficashpv5iwh7hqkqwpbpy", 'Unfortunately, factors outside of anyone’s control make it hard for some people to reach their potential: things like when they were born, who their parents are, where they grew up, whether they are a boy or a girl.We wake up every day determined to use our resources to create a world where everyone has the opportunity to lead a healthy and productive life. Most importantly, we believe this: All lives have equal value.', timeNow);
+            const getregistered = await regContract.registerOrg("0xCc673eE49Eb916b33919294D39F0518FdC0DaF0f", "Alexander S. widugwbdubej  ", "bafybeigo3t5tj5cop433hlyszxndw6tar3bgficashpv5iwh7hqkqwpbpy", 'Unfortunately, factors outside of anyone’s control make it hard for some people to reach their potential: things like when they were born, who their parents are, where they grew up, whether they are a boy or a girl.We wake up every day determined to use our resources to create a world where everyone has the opportunity to lead a healthy and productive life. Most importantly, we believe this: All lives have equal value.', timeNow);
             console.log("Completed reg")
             const unverifiedOrgDet = await getSetOfUnverifiedOrgs();
             console.log("Done reg")
@@ -81,19 +82,14 @@ export default function organisationList() {
             return (<>
                 <button className='bg-white' onClick={getReg}>Reg Org.</button>
                 <button className='bg-white' onClick={getSetOfUnverifiedOrgs}>Unverified Orgs.</button>
-            </>
-
-            );
-
+            </>);
         }
         else if (loading) {
             return (<button className='bg-white'>Loading...</button>);
         }
         else {
             return (
-                <button onClick={connectWallet} className='bg-white '>
-                    Connect your wallet
-                </button>
+                <ConnectButton></ConnectButton>
             );
         }
     };

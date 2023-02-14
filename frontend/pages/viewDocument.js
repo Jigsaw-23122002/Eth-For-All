@@ -4,18 +4,21 @@ import Web3Modal from "web3modal";
 import { providers, Contract } from "ethers";
 import { REGISTER_CONTRACT_ADDRESS, abi } from '../constants/index.js';
 
+
 export default function viewDocument() {
     const router = useRouter();
     const query = router.query;
-    // console.log(query);
     const [loading, setLoading] = useState(false);
     const [org_upvotes, setorg_upvotes] = useState(query.upvotes)
     const web3ModalRef = useRef();
-    web3ModalRef.current = new Web3Modal({
-        network: "goerli",
-        providerOptions: {},
-        disableInjectedProvider: false,
-    });
+    // const setNetwork = ()=>{
+    //     web3ModalRef.current = new Web3Modal({
+    //         network: "goerli",
+    //         providerOptions: {},
+    //         disableInjectedProvider: false,
+    //     });
+    // }
+    // window.setNetwork();
     const [walletConnected, setWalletConnected] = useState(false);
 
     const getProviderOrSigner = async (needSigner) => {
@@ -47,7 +50,7 @@ export default function viewDocument() {
     }
     
     const fileName = "220225_NOTICE-for-Re-opening-Hostels.pdf"
-    
+
     return (
         <div className='bg-black flex flex-col items-center '>
 
