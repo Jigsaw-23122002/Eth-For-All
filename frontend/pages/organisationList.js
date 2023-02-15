@@ -91,7 +91,7 @@ export default function organisationList() {
             const today = new Date();
             const timeNow = Math.floor((today.getTime()) / 1000);
             console.log(timeNow);
-            const getregistered = await regContract.registerOrg("0xb8D2a8ea54F71294f50e7088768Bd96eBED17946", "Smit  ", "bafybeieo76izxgib3xu5bwsrjnoolylmp2pdoigkmhomqe5dnbysmisfee", 'Unfortunately, factors outside of anyone’s control make it hard for some people to reach their potential: things like when they were born, who their parents are, where they grew up, whether they are a boy or a girl.We wake up every day determined to use our resources to create a world where everyone has the opportunity to lead a healthy and productive life. Most importantly, we believe this: All lives have equal value.', timeNow);
+            const getregistered = await regContract.registerOrg("0xb8D2a8ea54F71294f50e7088768Bd96eBED17946", "Sarvagnya  ", "bafybeieo76izxgib3xu5bwsrjnoolylmp2pdoigkmhomqe5dnbysmisfee", 'Unfortunately, factors outside of anyone’s control make it hard for some people to reach their potential: things like when they were born, who their parents are, where they grew up, whether they are a boy or a girl.We wake up every day determined to use our resources to create a world where everyone has the opportunity to lead a healthy and productive life. Most importantly, we believe this: All lives have equal value.', timeNow);
             console.log("Completed reg")
             const unverifiedOrgDet = await getSetOfUnverifiedOrgs();
             console.log("Done reg")
