@@ -46,7 +46,7 @@ setInterval(async () => {
     );
   }
   await contract.methods.emptyFinancialReportAddress();
-}, 8640000);
+}, 60000);
 
 app.listen(PORT, (error) => {
   if (!error)
