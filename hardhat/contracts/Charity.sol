@@ -347,10 +347,11 @@ contract Charity {
     }
 
     // Function to change the status of isStakePaid and add the organization into the list of verified organization.
-    function changeStakePaid() public {
-        orgIdentifier[msg.sender].isStakePaid = true;
-        distributeStake(msg.sender, true);
-        markAsVerified(msg.sender);
+    function changeStakePaid(address org_address, uint256 stakeAmount) public {
+        orgIdentifier[org_address].isStakePaid = true;
+        distributeStake(org_address, true);
+        orgIdentifier[org_address].stake = stakeAmount;
+        markAsVerified(org_address);
     }
 
     // Function to put the organization into the verified list. This has to be called after the stake is paid.
