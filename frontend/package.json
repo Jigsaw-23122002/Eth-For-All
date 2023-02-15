@@ -9,16 +9,32 @@
     "lint": "next lint"
   },
   "dependencies": {
+<<<<<<< HEAD
     "@walletconnect/web3-provider": "^1.8.0",
     "@web3auth/web3auth": "^2.1.3",
+=======
+    "@moralisweb3/next": "^2.14.1",
+    "@walletconnect/web3-provider": "^1.8.0",
+    "@web3auth/web3auth": "^2.1.3",
+    "@web3uikit/core": "^0.2.47",
+    "@web3uikit/icons": "^0.2.46",
+    "@web3uikit/web3": "^0.2.2",
+>>>>>>> 6bdb69f13ee8676d7feda3ad29028263da5299b8
     "axios": "^1.3.2",
     "ethers": "^5.7.2",
     "flowbite": "^1.6.3",
     "magic-sdk": "^13.2.0",
     "moralis": "^2.14.1",
+<<<<<<< HEAD
     "next": "13.1.6",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+=======
+    "next": "^13.1.6",
+    "next-auth": "^4.19.2",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+>>>>>>> 6bdb69f13ee8676d7feda3ad29028263da5299b8
     "react-moralis": "^1.4.2",
     "taos": "^1.0.2",
     "web3.storage": "^4.4.0",
@@ -26,10 +42,12 @@
     "web3uikit": "^1.0.4"
   },
   "devDependencies": {
+    "@types/react": "18.0.28",
     "autoprefixer": "^10.4.13",
     "eslint": "8.33.0",
     "eslint-config-next": "13.1.6",
     "postcss": "^8.4.21",
-    "tailwindcss": "^3.2.4"
+    "tailwindcss": "^3.2.4",
+    "typescript": "4.9.5"
   }
 }

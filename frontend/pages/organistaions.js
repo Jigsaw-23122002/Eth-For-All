@@ -1,8 +1,16 @@
-import { useState, React } from 'react'
+import { useState, React,useEffect } from 'react'
 import Link from 'next/link';
 
 export default function organistaions({ element }) {
-    const [data, setData] = useState(element);
+    const [data, setData] = useState(
+        {
+            doc_cid: element.doc_cid,
+            name: element.name,
+            upvotes: element.upvotes.toString(),
+            downvotes: element.downvotes.toString(),
+            org_address:element.org_address
+        }
+    );
 
     return (
         <li className="py-3 sm:py-4 w-full">
@@ -24,7 +32,7 @@ export default function organistaions({ element }) {
                         <span className='px-6 pl-6 text-gray-100 flex flex-rows items-center'>
                             {element.name}                      </span>
                         <span className='px-6  text-gray-100 flex flex-rows items-center'>
-                            <div className='h-6 w-full px-2 text-lg '>{element.upVotes}</div>
+                            <div className='h-6 w-full px-2 text-lg '>{element.upvotes.toString()}</div>
                             {/* <div className='h-6 w-full text-lg sm:visible'>{element.upVotes} &uarr;</div> */}
                             <div>
                                 <svg className="w-6 h-6  dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 11l3-3m0 0l3 3m-3-3v8m0-13a9 9 0 110 18 9 9 0 010-18z"></path></svg>
@@ -32,7 +40,7 @@ export default function organistaions({ element }) {
 
                         </span>
                         <span className='px-6  text-gray-100 flex flex-rows items-center'>
-                            <div className='h-6 w-full px-2 text-lg'>{element.downVotes}</div>
+                            <div className='h-6 w-full px-2 text-lg'>{element.downvotes.toString()}</div>
                             <div><svg className="w-6 h-6 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 13l-3 3m0 0l-3-3m3 3V8m0 13a9 9 0 110-18 9 9 0 010 18z"></path></svg>
                             </div>
                         </span>
