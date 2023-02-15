@@ -1,4 +1,4 @@
-import { useState, React } from 'react'
+import { useState, React,useEffect } from 'react'
 import Link from 'next/link';
 
 export default function organistaions({ element }) {
@@ -6,8 +6,8 @@ export default function organistaions({ element }) {
         {
             doc_cid: element.doc_cid,
             name: element.name,
-            upvotes: element.downvotes.toString(),
-            downvotes: element.upvotes.toString(),
+            upvotes: element.upvotes.toString(),
+            downvotes: element.downvotes.toString(),
             org_address:element.org_address
         }
     );

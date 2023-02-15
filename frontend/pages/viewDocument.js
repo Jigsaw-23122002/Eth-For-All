@@ -1,7 +1,7 @@
-import { React, useState, useRef } from 'react'
+import { React, useState, useRef, useEffect } from 'react'
 import { useRouter } from "next/router";
 import Web3Modal from "web3modal";
-import { providers, Contract } from "ethers";
+import { providers, Contract, BigNumber } from "ethers";
 import { REGISTER_CONTRACT_ADDRESS, abi } from '../constants/index.js';
 
 export default function viewDocument() {
@@ -9,6 +9,7 @@ export default function viewDocument() {
     const query = router.query;
     const [loading, setLoading] = useState(false);
     const [org_upvotes, setorg_upvotes] = useState(query.upvotes)
+    const [org_downvotes, setorg_downvotes] = useState(query.downvotes)
     const web3ModalRef = useRef();
     // const setNetwork = ()=>{
 
@@ -43,13 +44,46 @@ export default function viewDocument() {
         const timeNow = Math.floor((today.getTime()) / 1000);
         const signer = await getProviderOrSigner(true);
         const voteContract = new Contract(REGISTER_CONTRACT_ADDRESS, abi, signer);
-        await voteContract.upVote(query.org_address, timeNow);
-        const newVotes = await voteContract.countOfUpvotes(query.org_address);
-        setorg_upvotes(newVotes);
+        const valUpVotes = await voteContract.upVote(query.org_address, timeNow);
+        await valUpVotes.wait(3);
+        const val = await voteContract.countOfUpvotes(query.org_address)
+        // await val.wait(2);
+        console.log(val._isBigNumber);
+        console.log(val.toString());
+        setorg_upvotes(val.toString());
+       
     }
+    const downVoteOrg = async () => {
+        const today = new Date();
+        const timeNow = Math.floor((today.getTime()) / 1000);
+        const signer = await getProviderOrSigner(true);
+        const voteContract = new Contract(REGISTER_CONTRACT_ADDRESS, abi, signer);
+        const valUpVotes = await voteContract.downVote(query.org_address, timeNow);
+        await valUpVotes.wait(3);
+        const val = await voteContract.countOfDownvotes(query.org_address)
+        // await val.wait(2);
+        console.log(val._isBigNumber);
+        console.log(val.toString());
+        setorg_downvotes(val.toString());
+       
+    }
+    // useEffect(() => {
+        
+    //     testOp();
+        
+    // }, [org_upvotes]);
 
-    const fileName = "220225_NOTICE-for-Re-opening-Hostels.pdf"
-    // https://bafybeigo3t5tj5cop433hlyszxndw6tar3bgficashpv5iwh7hqkqwpbpy.ipfs.w3s.link/
+    // const testOp = async() =>{
+    //     const signer = await getProviderOrSigner(true);
+    //     const voteContract = new Contract(REGISTER_CONTRACT_ADDRESS, abi, signer)
+    //     const val = await voteContract.countOfUpvotes(query.org_address)
+    //     console.log(val._isBigNumber);
+    //     console.log(val.toString());
+    //     setorg_upvotes(val.toString());
+    //     console.log(org_upvotes)
+    // }
+    const fileName = "test_file.pdf"
+    // https://bafybeieo76izxgib3xu5bwsrjnoolylmp2pdoigkmhomqe5dnbysmisfee.ipfs.w3s.link/
     return (
         <div className='bg-black flex flex-col items-center '>
 
@@ -60,7 +94,7 @@ export default function viewDocument() {
                 <embed src={`https://${query.doc_cid}.ipfs.w3s.link/${fileName}`} className="col-span-3 w-full h-screen rounded-lg"></embed>
                 <div className=" m-6 w-4/5 h-3/4 p-6 grid grid-rows-6 bg-transparent">
                     <button type="button" onClick={upVoteOrg} className="w-auto text-white border border-gray-200  bg-transparent hover:bg-gradient-to-r from-purple-500 to-pink-500  focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">Up Vote &uarr;</button>
-                    <button type="button" className="w-auto text-white border border-gray-200  bg-transparent hover:bg-gradient-to-r from-purple-500 to-pink-500  focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">Down Vote &darr; </button>
+                    <button type="button" onClick={downVoteOrg} className="w-auto text-white border border-gray-200  bg-transparent hover:bg-gradient-to-r from-purple-500 to-pink-500  focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">Down Vote &darr; </button>
                     <div className='row-span-4 grid grid-rows-4 w-full items-center border border-gray-200  bg-transparent rounded-lg '>
                         <p className='text-white text-center w-full'>
                             Stats
@@ -70,7 +104,7 @@ export default function viewDocument() {
                             <svg className="w-6 h-6 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 11l3-3m0 0l3 3m-3-3v8m0-13a9 9 0 110 18 9 9 0 010-18z"></path></svg>
                         </div>
                         <div className='px-6  text-gray-100 grid grid-cols-2'>
-                            <p className='h-6 text-lg'>{query.downvotes}</p>
+                            <p className='h-6 text-lg'>{org_downvotes}</p>
                             <svg className="w-6 h-6 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 13l-3 3m0 0l-3-3m3 3V8m0 13a9 9 0 110-18 9 9 0 010 18z"></path></svg>
 
                         </div>
