@@ -1,0 +1,456 @@
+{
+	"compiler": {
+		"version": "0.8.9+commit.e5eed63a"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [],
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
+				"inputs": [],
+				"name": "admin",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "changeIsStakedPaid",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "org_address",
+						"type": "address"
+					}
+				],
+				"name": "checkIfDownvoted",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "org_address",
+						"type": "address"
+					}
+				],
+				"name": "checkIfUpvoted",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "org_address",
+						"type": "address"
+					}
+				],
+				"name": "checkVerificationStatus",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "org_addr",
+						"type": "address"
+					}
+				],
+				"name": "countOfDownvotes",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "org_addr",
+						"type": "address"
+					}
+				],
+				"name": "countOfUpvotes",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "org_addr",
+						"type": "address"
+					}
+				],
+				"name": "countOfViews",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "org_addr",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "current_time",
+						"type": "uint256"
+					}
+				],
+				"name": "downVote",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "emptyListOrganization",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "isStaked",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "isVerified",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "organization_address",
+						"type": "address"
+					},
+					{
+						"internalType": "string",
+						"name": "organization_name",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "document_cid",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "description",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "time",
+						"type": "uint256"
+					}
+				],
+				"name": "registerOrg",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "totalOrganizations",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "unverifiedOrganizationsList",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "address",
+								"name": "org_address",
+								"type": "address"
+							},
+							{
+								"internalType": "string",
+								"name": "name",
+								"type": "string"
+							},
+							{
+								"internalType": "string",
+								"name": "doc_cid",
+								"type": "string"
+							},
+							{
+								"internalType": "uint256",
+								"name": "upvotes",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "downvotes",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "views",
+								"type": "uint256"
+							},
+							{
+								"internalType": "bool",
+								"name": "verification_status",
+								"type": "bool"
+							},
+							{
+								"internalType": "string",
+								"name": "desc",
+								"type": "string"
+							},
+							{
+								"internalType": "uint256",
+								"name": "application_time",
+								"type": "uint256"
+							}
+						],
+						"internalType": "struct OrgCreation.OrgDetails[]",
+						"name": "",
+						"type": "tuple[]"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "org_addr",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "current_time",
+						"type": "uint256"
+					}
+				],
+				"name": "upVote",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "verifiedOrganizationsList",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "address",
+								"name": "org_address",
+								"type": "address"
+							},
+							{
+								"internalType": "string",
+								"name": "name",
+								"type": "string"
+							},
+							{
+								"internalType": "string",
+								"name": "doc_cid",
+								"type": "string"
+							},
+							{
+								"internalType": "uint256",
+								"name": "upvotes",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "downvotes",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "views",
+								"type": "uint256"
+							},
+							{
+								"internalType": "bool",
+								"name": "verification_status",
+								"type": "bool"
+							},
+							{
+								"internalType": "string",
+								"name": "desc",
+								"type": "string"
+							},
+							{
+								"internalType": "uint256",
+								"name": "application_time",
+								"type": "uint256"
+							}
+						],
+						"internalType": "struct OrgCreation.OrgDetails[]",
+						"name": "",
+						"type": "tuple[]"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "org_addr",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "current_time",
+						"type": "uint256"
+					}
+				],
+				"name": "votingDone",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"hardhat\\contracts\\OrgCreation.sol": "OrgCreation"
+		},
+		"evmVersion": "london",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"hardhat\\contracts\\OrgCreation.sol": {
+			"keccak256": "0xdcf694b024d1a1255aacfa75604c32dd739639437ac64a3f894d050574d09e3c",
+			"license": "UNLICENSED",
+			"urls": [
+				"bzz-raw://1dc8b0de720c0d4666c6194d912b2db2afb0d94b26bc96e2fc61c03378fb4863",
+				"dweb:/ipfs/QmXr9bM4FCXd6CxWyw3Jhxv7kugvK1hfMZpiG1HP3JYjeq"
+			]
+		}
+	},
+	"version": 1
+}
