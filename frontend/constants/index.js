@@ -1,109 +1,21 @@
-export const REGISTER_CONTRACT_ADDRESS = "0xE40eC3E826091f88F30Ea9926F583aea70F3E4fa";
+export const REGISTER_CONTRACT_ADDRESS = "0x417689a94CDe3B41eA3D6a26BB17C6D95ea71FdB";
 export const abi = [
 	{
-		"inputs": [],
-		"stateMutability": "nonpayable",
-		"type": "constructor"
-	},
-	{
-		"stateMutability": "payable",
-		"type": "fallback"
-	},
-	{
 		"inputs": [
 			{
 				"internalType": "address",
 				"name": "org_address",
 				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "stakeAmount",
+				"type": "uint256"
 			}
 		],
-		"name": "RemoveCharityIfFinancialReportFraud",
+		"name": "changeStakePaid",
 		"outputs": [],
 		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "org_address",
-				"type": "address"
-			}
-		],
-		"name": "RemoveCharityIfFraud",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "admin",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "changeIsStakedPaid",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "org_address",
-				"type": "address"
-			}
-		],
-		"name": "checkFinancialReportStatus",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "org_address",
-				"type": "address"
-			}
-		],
-		"name": "checkIfDownvoted",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "org_address",
-				"type": "address"
-			}
-		],
-		"name": "checkIfUpvoted",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"stateMutability": "view",
 		"type": "function"
 	},
 	{
@@ -122,77 +34,20 @@ export const abi = [
 				"type": "bool"
 			}
 		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "org_address",
-				"type": "address"
-			}
-		],
-		"name": "checkViolationStatus",
-		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "org_addr",
-				"type": "address"
-			}
-		],
-		"name": "countOfDownvotes",
+		"inputs": [],
+		"name": "cronJobsForVotes",
 		"outputs": [
 			{
-				"internalType": "uint256",
+				"internalType": "address[]",
 				"name": "",
-				"type": "uint256"
+				"type": "address[]"
 			}
 		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "org_addr",
-				"type": "address"
-			}
-		],
-		"name": "countOfUpvotes",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "org_addr",
-				"type": "address"
-			}
-		],
-		"name": "countOfViews",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
+		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
@@ -224,7 +79,7 @@ export const abi = [
 		"inputs": [
 			{
 				"internalType": "address",
-				"name": "org_addr",
+				"name": "org_address",
 				"type": "address"
 			},
 			{
@@ -246,7 +101,42 @@ export const abi = [
 	},
 	{
 		"inputs": [],
+		"name": "emptyFinancialReportAddress",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "emptyFinishedViolationVotes",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "emptyFinishedVotes",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "emptyListFinancialReports",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
 		"name": "emptyListOrganization",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "emptyNotSubmitFRAddress",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -266,28 +156,98 @@ export const abi = [
 	},
 	{
 		"inputs": [],
-		"name": "isStaked",
+		"name": "finishedViolationVoting",
 		"outputs": [
 			{
-				"internalType": "bool",
+				"internalType": "uint256[]",
 				"name": "",
-				"type": "bool"
+				"type": "uint256[]"
 			}
 		],
-		"stateMutability": "view",
+		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
 		"inputs": [],
-		"name": "isVerified",
+		"name": "getFinancialReports",
 		"outputs": [
 			{
-				"internalType": "bool",
+				"components": [
+					{
+						"internalType": "address",
+						"name": "org_address",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "upvotes",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "downvotes",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address[]",
+						"name": "upvoters",
+						"type": "address[]"
+					},
+					{
+						"internalType": "address[]",
+						"name": "downvoters",
+						"type": "address[]"
+					},
+					{
+						"internalType": "uint256",
+						"name": "reportUploadStartTime",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "reportUploadEndTime",
+						"type": "uint256"
+					},
+					{
+						"internalType": "bool",
+						"name": "isReportTrue",
+						"type": "bool"
+					},
+					{
+						"internalType": "string",
+						"name": "report_cid",
+						"type": "string"
+					},
+					{
+						"internalType": "bool",
+						"name": "isOpen",
+						"type": "bool"
+					},
+					{
+						"internalType": "bool",
+						"name": "isSubmitted",
+						"type": "bool"
+					}
+				],
+				"internalType": "struct Charity.FinancialReport[]",
 				"name": "",
-				"type": "bool"
+				"type": "tuple[]"
 			}
 		],
-		"stateMutability": "view",
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getUnsubmittedFROrgs",
+		"outputs": [
+			{
+				"internalType": "address[]",
+				"name": "",
+				"type": "address[]"
+			}
+		],
+		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
@@ -312,13 +272,7 @@ export const abi = [
 			}
 		],
 		"name": "notVoted",
-		"outputs": [
-			{
-				"internalType": "address[]",
-				"name": "",
-				"type": "address[]"
-			}
-		],
+		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
 	},
@@ -414,7 +368,20 @@ export const abi = [
 				"type": "address"
 			}
 		],
-		"name": "reportUpVote",
+		"name": "RemoveCharityIfFinancialReportFraud",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "index",
+				"type": "uint256"
+			}
+		],
+		"name": "RemoveCharityIfFraud",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -430,6 +397,286 @@ export const abi = [
 		"name": "reportsDownVote",
 		"outputs": [],
 		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "org_address",
+				"type": "address"
+			}
+		],
+		"name": "reportUpVote",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "org_address",
+				"type": "address"
+			}
+		],
+		"name": "setFinancialReportStatus",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "org_address",
+				"type": "address"
+			}
+		],
+		"name": "setVerificationStatus",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "index",
+				"type": "uint256"
+			}
+		],
+		"name": "setViolationStatus",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "org_address",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "current_time",
+				"type": "uint256"
+			}
+		],
+		"name": "upVote",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "org_address",
+				"type": "address"
+			}
+		],
+		"name": "upvotedOnFinancialReport",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "index",
+				"type": "uint256"
+			}
+		],
+		"name": "upvotedOnVerify",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "index",
+				"type": "uint256"
+			}
+		],
+		"name": "violationDownVote",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "index",
+				"type": "uint256"
+			}
+		],
+		"name": "violationUpVote",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "admin",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "org_address",
+				"type": "address"
+			}
+		],
+		"name": "checkIfDownvoted",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "org_address",
+				"type": "address"
+			}
+		],
+		"name": "checkIfUpvoted",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "org_addr",
+				"type": "address"
+			}
+		],
+		"name": "countOfDownvotes",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "org_addr",
+				"type": "address"
+			}
+		],
+		"name": "countOfUpvotes",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "org_addr",
+				"type": "address"
+			}
+		],
+		"name": "countOfViews",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getSubmittedFROrgs",
+		"outputs": [
+			{
+				"internalType": "address[]",
+				"name": "",
+				"type": "address[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "isStaked",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "isVerified",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
 		"type": "function"
 	},
 	{
@@ -495,6 +742,11 @@ export const abi = [
 						"internalType": "uint256",
 						"name": "application_time",
 						"type": "uint256"
+					},
+					{
+						"internalType": "bool",
+						"name": "decision",
+						"type": "bool"
 					}
 				],
 				"internalType": "struct Charity.OrgDetails[]",
@@ -503,56 +755,6 @@ export const abi = [
 			}
 		],
 		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "org_addr",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "current_time",
-				"type": "uint256"
-			}
-		],
-		"name": "upVote",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "org_address",
-				"type": "address"
-			}
-		],
-		"name": "upvotedOnFinancialReport",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "org_address",
-				"type": "address"
-			}
-		],
-		"name": "upvotedOnVerify",
-		"outputs": [],
-		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
@@ -605,6 +807,11 @@ export const abi = [
 						"internalType": "uint256",
 						"name": "application_time",
 						"type": "uint256"
+					},
+					{
+						"internalType": "bool",
+						"name": "decision",
+						"type": "bool"
 					}
 				],
 				"internalType": "struct Charity.OrgDetails[]",
@@ -620,32 +827,6 @@ export const abi = [
 			{
 				"internalType": "address",
 				"name": "org_address",
-				"type": "address"
-			}
-		],
-		"name": "violationDownVote",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "org_address",
-				"type": "address"
-			}
-		],
-		"name": "violationUpVote",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "org_addr",
 				"type": "address"
 			},
 			{
@@ -664,9 +845,5 @@ export const abi = [
 		],
 		"stateMutability": "view",
 		"type": "function"
-	},
-	{
-		"stateMutability": "payable",
-		"type": "receive"
 	}
 ];
