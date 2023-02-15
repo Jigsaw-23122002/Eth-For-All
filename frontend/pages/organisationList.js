@@ -13,7 +13,8 @@ export default function organisationList() {
         useWeb3Contract({
             abi: abi,
             contractAddress: REGISTER_CONTRACT_ADDRESS,
-            functionName: "unverifiedOrganizationsList"
+            functionName: "unverifiedOrganizationsList",
+            params:{}
             
         });
 
@@ -56,18 +57,18 @@ export default function organisationList() {
             console.error(error);
         }
     }
-    const getOwner = async () => {
-        try {
-            const signer = await getProviderOrSigner(true);
-            const regContract = new Contract(REGISTER_CONTRACT_ADDRESS, abi, signer);
-            const unverifiedOrgs = await regContract.unverifiedOrganizationsList();
-            // setLoading(true);
-            console.log(unverifiedOrgs);
+    // const getOwner = async () => {
+    //     try {
+    //         const signer = await getProviderOrSigner(true);
+    //         const regContract = new Contract(REGISTER_CONTRACT_ADDRESS, abi, signer);
+    //         const unverifiedOrgs = await regContract.unverifiedOrganizationsList();
+    //         // setLoading(true);
+    //         console.log(unverifiedOrgs);
 
-        } catch (error) {
-            console.error(error);
-        }
-    }
+    //     } catch (error) {
+    //         console.error(error);
+    //     }
+    // }
     const getViews = async () =>{
         try {
             const signer = await getProviderOrSigner(true);
@@ -120,7 +121,7 @@ export default function organisationList() {
         if (walletConnected) {
 
             return (<>
-                <button className='bg-white' onClick={getUnverifiedList}>Reg Org.</button>
+                <button className='bg-white' onClick={getReg}>Reg Org.</button>
                 
                 <button className='bg-white' onClick={getSetOfUnverifiedOrgs}>Unverified Orgs.</button>
                 {/* {data && <pre className='text-white'>{JSON.stringify(data)}</pre>} */}
