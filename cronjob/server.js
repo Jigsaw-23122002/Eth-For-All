@@ -16,6 +16,7 @@ setInterval(async () => {
 
   console.log(contract.methods);
 
+  // Voting Cronjob
   const finishedVotes = await contract.methods.cronJobsForVotes().call();
   for (let i = 0; i < finishedVotes.length; i++) {
     await contract.methods.setVerificationStatus(finishedVotes[i]);
@@ -24,12 +25,8 @@ setInterval(async () => {
     await contract.methods.emptyNotVotedArray();
   }
   await contract.methods.emptyFinishedVotes();
-}, 8640000);
 
-setInterval(async () => {
-  const web3 = new Web3(ALCHEMY_RPC_URL);
-  const contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
-
+  // Violations Cronjob
   const finishedViolationVotes =
     await contract.methods.finishedViolationVoting();
   for (let i = 0; i < finishedViolationVotes.length; i++) {
@@ -38,12 +35,8 @@ setInterval(async () => {
     await contract.methods.RemoveCharityIfFraud(finishedViolationVotes[i]);
   }
   await contract.methods.emptyFinishedViolationVotes();
-}, 8640000);
 
-setInterval(async () => {
-  const web3 = new Web3(ALCHEMY_RPC_URL);
-  const contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
-
+  // Financial Report Cronjob
   const submittedFROrgs = await contract.methods.getSubmittedFROrgs();
   for (let i = 0; i < submittedFROrgs.length; i++) {
     await contract.methods.setFinancialReportStatus(submittedFROrgs[i]);
