@@ -121,8 +121,10 @@ export default function viewDocument() {
 
 
             </div>
+            
+          </div>
 
 
-        </div>
-    )
+  
+  );
 }

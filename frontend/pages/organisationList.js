@@ -137,7 +137,11 @@ export default function organisationList() {
             );
         }
     };
-
+    // useEffect(() => {
+      
+    // getSetOfUnverifiedOrgs();
+    // }, [orgsList])
+    
     useEffect(() => {
         if (!walletConnected) {
             web3ModalRef.current = new Web3Modal({
