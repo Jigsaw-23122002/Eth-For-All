@@ -1,6 +1,6 @@
 const ALCHEMY_RPC_URL =
   "https://eth-goerli.g.alchemy.com/v2/FvGvtDqjaAB4ovhP-eDlIxI1tufnJWyX";
-const CONTRACT_ADDRESS = "0x98030A92DF4B6B8298c4AE783D75163891F7b0f8";
+const CONTRACT_ADDRESS = "0xd899F753A484eeB6d51392e7270562C370ed0c40";
 const CONTRACT_ABI = [
   {
     inputs: [],
@@ -47,7 +47,18 @@ const CONTRACT_ABI = [
     type: "function",
   },
   {
-    inputs: [],
+    inputs: [
+      {
+        internalType: "address",
+        name: "org_address",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "stakeAmount",
+        type: "uint256",
+      },
+    ],
     name: "changeStakePaid",
     outputs: [],
     stateMutability: "nonpayable",
