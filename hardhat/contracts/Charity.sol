@@ -217,7 +217,7 @@ contract Charity {
         org.name = organization_name;
         org.doc_cid = document_cid;
         org.desc = description;
-        org.application_time = time + 2 days;
+        org.application_time = time + 1 minutes;
         orgIdentifier[organization_address] = org;
 
         organizationAddress.push(organization_address);
