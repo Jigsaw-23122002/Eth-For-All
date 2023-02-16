@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: UNLICENSED
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
 
 contract Charity {
@@ -89,8 +89,8 @@ contract Charity {
     FinancialReport[] listFinancialReports;
 
     constructor() {
-  admin = msg.sender;
-        stakeToBeDistributed = 5 * 10**17;
+        admin = msg.sender;
+        stakeToBeDistributed = 5 * 10 ** 17;
         registeredViolations = 0;
         registerOrg(msg.sender,"Owner","None","Description",block.timestamp);
         orgIdentifier[msg.sender].verification_status = true;
@@ -138,11 +138,10 @@ contract Charity {
     }
 
     //Function to check whether the time of voting for the registered organizations is finish or not.
-    function votingDone(address org_address, uint256 current_time)
-        public
-        view
-        returns (bool)
-    {
+    function votingDone(
+        address org_address,
+        uint256 current_time
+    ) public view returns (bool) {
         if (orgIdentifier[org_address].application_time < current_time) {
             return true;
         } else {
@@ -406,11 +405,10 @@ contract Charity {
     }
 
     // Function to change the status of isStakePaid and add the organization into the list of verified organization.
-    function changeStakePaid(address org_address, uint256 stakeAmount) public {
-        orgIdentifier[org_address].isStakePaid = true;
-        distributeStake(org_address, true);
-        orgIdentifier[org_address].stake = stakeAmount;
-        markAsVerified(org_address);
+    function changeStakePaid() public {
+        orgIdentifier[msg.sender].isStakePaid = true;
+        distributeStake(msg.sender, true);
+        markAsVerified(msg.sender);
     }
 
     // Function to put the organization into the verified list. This has to be called after the stake is paid.
