@@ -2,23 +2,37 @@
 pragma solidity ^0.8.9;
 
 contract Charity {
-    struct Organization {
+       struct Organization {
         address org_address;
         string name;
         string doc_cid;
         uint256 upvotes;
         uint256 downvotes;
+        uint256 views;
         bool verification_status;
         address[] upvoters;
         address[] downvoters;
+        mapping(address => uint8) voters;
         uint256 stake;
         string desc;
         uint256 points;
         uint256 application_time;
         bool isStakePaid;
         bool decision;
-    }
 
+    }
+        struct OrgDetails {
+        address org_address;
+        string name;
+        string doc_cid;
+        uint256 upvotes;
+        uint256 downvotes;
+        uint256 views;
+        bool verification_status;
+        string desc;
+        uint256 application_time;
+        bool decision;
+    }
     struct Violation {
         uint256 id;
         address org_address;
@@ -47,6 +61,7 @@ contract Charity {
         bool isOpen;
         bool isSubmitted;
     }
+       uint256 verified_org_cnt=1;
 
     mapping(address => Organization) private orgIdentifier;
     mapping(address => mapping(address => uint256)) voters;
@@ -74,9 +89,13 @@ contract Charity {
     FinancialReport[] listFinancialReports;
 
     constructor() {
-        admin = msg.sender;
+  admin = msg.sender;
         stakeToBeDistributed = 5 * 10**17;
         registeredViolations = 0;
+        registerOrg(msg.sender,"Owner","None","Description",block.timestamp);
+        orgIdentifier[msg.sender].verification_status = true;
+       
+        orgIdentifier[msg.sender].isStakePaid = true;
     }
 
     // GENERAL FUNCTIONS OF THE CONTRACT
@@ -134,30 +153,67 @@ contract Charity {
     // Function used to return the list of all the verified organization onto the website.
     function verifiedOrganizationsList()
         public
-        returns (Organization[] memory)
+        view
+        returns (OrgDetails[] memory)
     {
-        for (uint256 i = 0; i < organizationAddress.length; i++) {
-            if (
-                orgIdentifier[organizationAddress[i]].verification_status &&
-                orgIdentifier[organizationAddress[i]].isStakePaid
-            ) {
-                listOrganizations.push(orgIdentifier[organizationAddress[i]]);
+        uint256 len = organizationAddress.length;
+        uint256 cnt = 0;
+        OrgDetails[] memory verified_org = new OrgDetails[](verified_org_cnt);
+        for (uint256 i = 0; i < len; i++) {
+            address org_addr = organizationAddress[i];
+            if (orgIdentifier[org_addr].verification_status && orgIdentifier[organizationAddress[i]].verification_status &&
+                orgIdentifier[organizationAddress[i]].isStakePaid) {
+                Organization storage new_org = orgIdentifier[org_addr];
+                OrgDetails memory new_org_det = OrgDetails({
+                    org_address: new_org.org_address,
+                    name: new_org.name,
+                    doc_cid: new_org.doc_cid,
+                    upvotes: new_org.upvotes,
+                    downvotes: new_org.downvotes,
+                    views:new_org.views,
+                    verification_status: new_org.verification_status,
+                    desc: new_org.desc,
+                    application_time: new_org.application_time,
+                    decision:new_org.decision
+                });
+                verified_org[cnt] = new_org_det;
+                cnt += 1;
             }
         }
-        return listOrganizations;
+        return verified_org;
     }
 
     // Function to return the list of all the un verifiied orgnization onto the website.
     function unverifiedOrganizationsList()
         public
-        returns (Organization[] memory)
+        view
+        returns (OrgDetails[] memory)
     {
-        for (uint256 i = 0; i < organizationAddress.length; i++) {
-            if (orgIdentifier[organizationAddress[i]].isStakePaid == false) {
-                listOrganizations.push(orgIdentifier[organizationAddress[i]]);
+        uint256 len = organizationAddress.length;
+        uint256 cnt = 0;
+        OrgDetails[] memory unverified_org = new OrgDetails[](
+            organizationAddress.length - verified_org_cnt
+        );
+        for (uint256 i = 0; i < len; i++) {
+            address org_addr = organizationAddress[i];
+            if (!orgIdentifier[org_addr].verification_status && orgIdentifier[organizationAddress[i]].isStakePaid == false) {
+                OrgDetails memory new_org = OrgDetails({
+                    org_address: orgIdentifier[org_addr].org_address,
+                    name: orgIdentifier[org_addr].name,
+                    doc_cid: orgIdentifier[org_addr].doc_cid,
+                    upvotes: orgIdentifier[org_addr].upvotes,
+                    downvotes: orgIdentifier[org_addr].downvotes,
+                    views:orgIdentifier[org_addr].views,
+                    verification_status: orgIdentifier[org_addr].verification_status,
+                    desc: orgIdentifier[org_addr].desc,
+                    decision:orgIdentifier[org_addr].decision,
+                    application_time: orgIdentifier[org_addr].application_time
+                });
+                unverified_org[cnt] = new_org;
+                cnt += 1;
             }
         }
-        return listOrganizations;
+        return unverified_org;
     }
 
     // Function to empty the listOrganization global array variable.
@@ -168,7 +224,7 @@ contract Charity {
         }
     }
 
-    modifier isValid(address org_address, address voter_address) {
+    modifier isValid(address org_address) {
         require(
             orgIdentifier[org_address].application_time != 0,
             "Organization address does not exist!"
@@ -178,12 +234,12 @@ contract Charity {
             "Organization already verified!"
         );
         require(
-            orgIdentifier[voter_address].application_time != 0 &&
-                orgIdentifier[voter_address].verification_status,
+            orgIdentifier[msg.sender].application_time != 0 &&
+                orgIdentifier[msg.sender].verification_status,
             "Voter organization is not verified, not permitted to vote!"
         );
         require(
-            voters[org_address][voter_address] == 0,
+            voters[org_address][msg.sender] == 0,
             "Voter organization cannot vote more than once!"
         );
         _;
@@ -197,6 +253,9 @@ contract Charity {
     // ) public returns (bool) {}
 
     // FUNCTIONS OF ORGANIZATIONS
+    function checkAlreadyRegistered() public view returns (bool) {
+        return orgIdentifier[msg.sender].application_time != 0;
+    }
 
     // Function to register the organization onto the website.
     function registerOrg(
@@ -211,29 +270,26 @@ contract Charity {
             "Organization already registered!"
         );
 
-        Organization memory org;
-
-        org.org_address = organization_address;
-        org.name = organization_name;
-        org.doc_cid = document_cid;
-        org.desc = description;
-        org.application_time = time + 1 minutes;
-        orgIdentifier[organization_address] = org;
-
+        orgIdentifier[organization_address].org_address = organization_address;
+        orgIdentifier[organization_address].name = organization_name;
+        orgIdentifier[organization_address].doc_cid = document_cid;
+        orgIdentifier[organization_address].desc = description;
+        orgIdentifier[organization_address].application_time = time + 2 minutes;
+        orgIdentifier[organization_address].views = countOfViews(organization_address)+1;
         organizationAddress.push(organization_address);
     }
 
     // Function to upvote the organization.
     function upVote(
         address org_address,
-        address voter_address,
+       
         uint256 current_time
-    ) public isValid(org_address, voter_address) returns (bool) {
+    ) public isValid(org_address) returns (bool) {
         orgIdentifier[org_address].upvotes += 1;
-        orgIdentifier[org_address].upvoters.push(voter_address);
-        voters[org_address][voter_address] = 1;
+        orgIdentifier[org_address].upvoters.push(msg.sender);
+        voters[org_address][msg.sender] = 1;
         if (orgIdentifier[org_address].application_time < current_time) {
-            return true;
+             return checkVerificationStatus(org_address);
         } else {
             return false;
         }
@@ -242,31 +298,34 @@ contract Charity {
     // Function to downvote the organization.
     function downVote(
         address org_address,
-        address voter_address,
+       
         uint256 current_time
-    ) public isValid(org_address, voter_address) returns (bool) {
+    ) public isValid(org_address) returns (bool) {
         orgIdentifier[org_address].downvotes += 1;
-        orgIdentifier[org_address].downvoters.push(voter_address);
-        voters[org_address][voter_address] = 2;
+        orgIdentifier[org_address].downvoters.push(msg.sender);
+        voters[org_address][msg.sender] = 2;
         if (orgIdentifier[org_address].application_time < current_time) {
-            return true;
+             return checkVerificationStatus(org_address);
         } else {
             return false;
         }
     }
 
     // Function to check whether the organization is verified or not.
-    function checkVerificationStatus(address org_address, bool category)
+    function checkVerificationStatus(address org_address)
         public
-        view
-        returns (bool, bool)
+        
+        returns (bool)
     {
         if (
             orgIdentifier[org_address].upvotes * 100 >= totalOrganizations * 51
         ) {
-            return (true, category);
+            orgIdentifier[org_address].verification_status = true;
+            orgIdentifier[org_address].isStakePaid = true;
+            verified_org_cnt++;
+            return (true);
         }
-        return (false, category);
+        return (false);
     }
 
     // THIS FUNCTION WILL BE IN THE FRONTEND.
