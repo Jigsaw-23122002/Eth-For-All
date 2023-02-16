@@ -35,14 +35,14 @@ function Login() {
   return (
     <ThemeProvider attribute="class">
       <div className="top-0 left-0 right-0 w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-modal md:h-full flex flex-row justify-center items-center">
-        <div class="w-full max-w-sm p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700">
-          <form class="space-y-6" action="#">
-            <h5 class="text-xl font-medium text-gray-900 dark:text-white">
+        <div className="w-full max-w-sm p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700">
+          <form className="space-y-6" action="#">
+            <h5 className="text-xl font-medium text-gray-900 dark:text-white">
               Login yourself to our platform
             </h5>
             <div>
               <label
-                htmlFor="input-group-1"
+                htmlhtmlFor="input-group-1"
                 className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
               >
                 Email
@@ -74,7 +74,7 @@ function Login() {
             </div>
             <div>
               <label
-                htmlFor="password"
+                htmlhtmlFor="password"
                 className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
               >
                 Password
@@ -108,62 +108,62 @@ function Login() {
               </div>
             </div>
             <label
-              htmlFor="access"
+              htmlhtmlFor="access"
               className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
             >
               Select the access type
             </label>
-            <div class="flex flex-wrap">
-              <div class="flex items-center mr-4">
+            <div className="flex flex-wrap">
+              <div className="flex items-center mr-4">
                 <input
                   id="red-radio"
                   type="radio"
                   value=""
                   name="colored-radio"
-                  class="w-4 h-4 text-red-600 bg-gray-100 border-gray-300 focus:ring-red-500 dark:focus:ring-red-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                  className="w-4 h-4 text-red-600 bg-gray-100 border-gray-300 focus:ring-red-500 dark:focus:ring-red-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                   onClick={() => {
                     setType(userType[0]);
                   }}
                 />
                 <label
-                  for="red-radio"
-                  class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                  htmlFor="red-radio"
+                  className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                 >
                   Organization
                 </label>
               </div>
-              <div class="flex items-center mr-4">
+              <div className="flex items-center mr-4">
                 <input
                   id="green-radio"
                   type="radio"
                   value=""
                   name="colored-radio"
-                  class="w-4 h-4 text-green-600 bg-gray-100 border-gray-300 focus:ring-green-500 dark:focus:ring-green-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                  className="w-4 h-4 text-green-600 bg-gray-100 border-gray-300 focus:ring-green-500 dark:focus:ring-green-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                   onClick={() => {
                     setType(userType[1]);
                   }}
                 />
                 <label
-                  for="green-radio"
-                  class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                  htmlFor="green-radio"
+                  className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                 >
                   Donar
                 </label>
               </div>
-              <div class="flex items-center mr-4">
+              <div className="flex items-center mr-4">
                 <input
                   id="purple-radio"
                   type="radio"
                   value=""
                   name="colored-radio"
-                  class="w-4 h-4 text-purple-600 bg-gray-100 border-gray-300 focus:ring-purple-500 dark:focus:ring-purple-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                  className="w-4 h-4 text-purple-600 bg-gray-100 border-gray-300 focus:ring-purple-500 dark:focus:ring-purple-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                   onClick={() => {
                     setType(userType[2]);
                   }}
                 />
                 <label
-                  for="purple-radio"
-                  class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                  htmlFor="purple-radio"
+                  className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                 >
                   End user
                 </label>
@@ -171,16 +171,16 @@ function Login() {
             </div>
             <button
               type="button"
-              class="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 w-full"
+              className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 w-full"
               onClick={() => checkForm()}
             >
               Login
             </button>
-            <div class="text-sm font-medium text-gray-500 dark:text-gray-300">
+            <div className="text-sm font-medium text-gray-500 dark:text-gray-300">
               Not registered?{" "}
               <a
                 href="#"
-                class="text-blue-700 hover:underline dark:text-blue-500"
+                className="text-blue-700 hover:underline dark:text-blue-500"
               >
                 Create account
               </a>

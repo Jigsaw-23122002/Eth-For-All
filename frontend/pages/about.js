@@ -1,4 +1,4 @@
-import {React,useState} from 'react'
+import { React, useState } from 'react'
 import { Web3Storage } from 'web3.storage'
 
 export default function about() {
@@ -30,31 +30,31 @@ export default function about() {
         setcidValue(cid)
         return cid
     }
-    async function retrieveFiles () {
-        
+    async function retrieveFiles() {
+
         const client = makeStorageClient()
         const res = await client.get(cidValue)
         console.log(`Got a response! [${res.status}] ${res.statusText}`)
         if (!res.ok) {
-          throw new Error(`failed to get ${cidValue} - [${res.status}] ${res.statusText}`)
+            throw new Error(`failed to get ${cidValue} - [${res.status}] ${res.statusText}`)
         }
-      
+
         // unpack File objects from the response
         const files = await res.files()
         for (const file of files) {
-          console.log(`${file.cid} -- ${file.path} -- ${file.size}`)
+            console.log(`${file.cid} -- ${file.path} -- ${file.size}`)
         }
-      }
+    }
     return (
         <div>
-            <label for="avatar">Choose a file:</label>
-            <input type="file" 
+            <label htmlFor="avatar">Choose a file:</label>
+            <input type="file"
                 id="avatar" name="avatar"
                 accept="image/png, image/jpeg application/pdf"></input>
-            <button onClick={storeFiles} for="avatar" className="mx-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            <button onClick={storeFiles} htmlFor="avatar" className="mx-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                 Upload
             </button>
-            <button onClick={retrieveFiles} for="avatar" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            <button onClick={retrieveFiles} htmlFor="avatar" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                 Retrieve
             </button>
         </div>

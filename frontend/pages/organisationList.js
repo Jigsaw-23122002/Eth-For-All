@@ -9,19 +9,6 @@ import { useWeb3Contract } from "react-moralis";
 
 export default function organisationList() {
   const [orgsList, setorgsList] = useState([]);
-  const {
-    data,
-    error,
-    runContractFunction: unverifiedOrganizationsList2,
-    isFetching,
-    isLoading,
-  } = useWeb3Contract({
-    abi: abi,
-    contractAddress: REGISTER_CONTRACT_ADDRESS,
-    functionName: "unverifiedOrganizationsList",
-    params: {},
-  });
-
   // const [orgsList, setorgsList] = useState([{ doc_cid: 'bafybeieo76izxgib3xu5bwsrjnoolylmp2pdoigkmhomqe5dnbysmisfee', upvotes: 26, downvotes: 5, view: 56, name: 'Alexander S. Onassis Foundation' }, { doc_cid: 'bafybeieo76izxgib3xu5bwsrjnoolylmp2pdoigkmhomqe5dnbysmisfee', upvotes: 26, downvotes: 5, view: 56, name: 'The Alliance' }, { doc_cid: 'bafybeieo76izxgib3xu5bwsrjnoolylmp2pdoigkmhomqe5dnbysmisfee', upvotes: 26, downvotes: 5, view: 56, name: 'Asbestos Disease Awareness Organization' }, { doc_cid: 'bafybeieo76izxgib3xu5bwsrjnoolylmp2pdoigkmhomqe5dnbysmisfee', upvotes: 26, downvotes: 5, view: 56, name: 'Cardiac Risk in the Young' }, { doc_cid: 'bafybeieo76izxgib3xu5bwsrjnoolylmp2pdoigkmhomqe5dnbysmisfee', upvotes: 26, downvotes: 5, view: 56, name: 'The Crohn\'s and Colitis Foundation of Canada' }, { doc_cid: 'bafybeieo76izxgib3xu5bwsrjnoolylmp2pdoigkmhomqe5dnbysmisfee', upvotes: 26, downvotes: 5, view: 56, name: 'Global Village Foundation' }, { doc_cid: 'bafybeieo76izxgib3xu5bwsrjnoolylmp2pdoigkmhomqe5dnbysmisfee', upvotes: 26, downvotes: 5, view: 56, name: 'International Republican Institute' }, { doc_cid: 'bafybeieo76izxgib3xu5bwsrjnoolylmp2pdoigkmhomqe5dnbysmisfee', upvotes: 26, downvotes: 5, view: 56, name: 'Ratanak International' }, { doc_cid: 'bafybeieo76izxgib3xu5bwsrjnoolylmp2pdoigkmhomqe5dnbysmisfee', upvotes: 26, downvotes: 5, view: 56, name: 'Realdania' }])
   const [loading, setLoading] = useState(false);
 
@@ -42,6 +29,8 @@ export default function organisationList() {
       console.log("Done signer");
       return signer;
     }
+    console.log("Done provider");
+    return web3Provider;
   }
     const getReg = async () => {
         try {

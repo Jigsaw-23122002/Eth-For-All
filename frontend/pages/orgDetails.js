@@ -6,7 +6,7 @@ export default function orgDetails() {
     const router = useRouter();
     const query = router.query;
     const fileName = 'pic.jpg';
-    const tableTitle = [ 'Receiver Address', 'Token ID', ' Transaction Hash', 'Block Timestamp', 'Block Number']
+    const tableTitle = ['Receiver Address', 'Token ID', ' Transaction Hash', 'Block Timestamp', 'Block Number']
 
     const [verifiedOrgDetails, setverifiedOrgDetails] = useState({ pic_cid: 'bafybeidy6jb3q4etakqsgizfnp2pp7novz6i457lwq5l3kg2stp5kcof7i', details: ['Unfortunately, factors outside of anyone’s control make it hard for some people to reach their potential: things like when they were born, who their parents are, where they grew up, whether they are a boy or a girl.We wake up every day determined to use our resources to create a world where everyone has the opportunity to lead a healthy and productive life. Most importantly, we believe this: All lives have equal value.', ' That’s why we made the decision to donate our wealth from Microsoft to help others.The challenge when we started out was how to do that in a meaningful and high-impact way. We were drawn to things that sprang from our experience, so we began donating PCs to public libraries across the United States to give everyone a chance to use one.', ' As we read and traveled more, we also became curious about inequalities further from home.One day, we read a newspaper article about millions of children in poor countries who die from diseases, such as diarrhea and pneumonia, that were easily treated in wealthier countries. That blew our minds. As new parents it hit us especially hard. If there\'s anything worse than the death of a child, we said to each other, then surely, it’s the preventable death of a child.'], transactions: [{ to: '0x4A9CF09B996F0Ddf5498201f1D6cb8f6C88e3e0e', from: '0xCc673eE49Eb916b33919294D39F0518FdC0DaF0f', amt: '200' }, { to: '0x4A9CF09B996F0Ddf5498201f1D6cb8f6C88e3e0e', from: '0xCc673eE49Eb916b33919294D39F0518FdC0DaF0f', amt: '200' }, { to: '0x4A9CF09B996F0Ddf5498201f1D6cb8f6C88e3e0e', from: '0xCc673eE49Eb916b33919294D39F0518FdC0DaF0f', amt: '200' }, { to: '0x4A9CF09B996F0Ddf5498201f1D6cb8f6C88e3e0e', from: '0xCc673eE49Eb916b33919294D39F0518FdC0DaF0f', amt: '200' }, { to: '0x4A9CF09B996F0Ddf5498201f1D6cb8f6C88e3e0e', from: '0xCc673eE49Eb916b33919294D39F0518FdC0DaF0f', amt: '200' }] })
     const getTransactionDetails = async () => {
@@ -24,12 +24,12 @@ export default function orgDetails() {
                 blockNumber
               }
             }`});
-            setverifiedOrgDetails((prev)=>({
+            setverifiedOrgDetails((prev) => ({
                 ...prev,
                 transactions: result.data.data.transfers
 
             }));
-            
+
         } catch (error) {
             console.error(error)
         }
@@ -55,96 +55,99 @@ export default function orgDetails() {
                     </div>
                 </div>
             </div>
+            <button className="bg-white" onClick={() => router.push({ pathname: '/reportOrg', query: query })}>
+                Report Org.
+            </button>
 
 
 
             <div>
-                    <div class="-mx-4 sm:-mx-8 px-4 sm:px-8 py-4 overflow-x-auto">
-                        <div class="inline-block min-w-full shadow rounded-lg overflow-hidden">
-                            <table class="min-w-full leading-normal">
-                                <thead>
-                                    <tr>
-                                        {tableTitle.map((ele) => {
-                                            return <th
-                                                class="px-5 py-3 border-b-2 border-gray-800 bg-gray-700 text-left text-xs font-semibold text-gray-200 uppercase tracking-wider">{ele}
-                                            </th>
-                                        })}
+                <div className="-mx-4 sm:-mx-8 px-4 sm:px-8 py-4 overflow-x-auto">
+                    <div className="inline-block min-w-full shadow rounded-lg overflow-hidden">
+                        <table className="min-w-full leading-normal">
+                            <thead>
+                                <tr>
+                                    {tableTitle.map((ele) => {
+                                        return <th
+                                            className="px-5 py-3 border-b-2 border-gray-800 bg-gray-700 text-left text-xs font-semibold text-gray-200 uppercase tracking-wider">{ele}
+                                        </th>
+                                    })}
 
-                                    </tr>
-                                </thead>
+                                </tr>
+                            </thead>
 
-                                <tbody>
-                                    {(verifiedOrgDetails.transactions).map((ele) => {
-                                        return <tr>
-                                            {/* <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                                                <div class="flex items-center">
-                                                    <div class="flex-shrink-0 w-10 h-10">
-                                                        <img class="w-full h-full rounded-full"
+                            <tbody>
+                                {(verifiedOrgDetails.transactions).map((ele) => {
+                                    return <tr>
+                                        {/* <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                                <div className="flex items-center">
+                                                    <div className="flex-shrink-0 w-10 h-10">
+                                                        <img className="w-full h-full rounded-full"
                                                             src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.2&w=160&h=160&q=80"
                                                             alt="" />
                                                     </div>
-                                                    <div class="ml-3">
-                                                        <p class="text-gray-900 whitespace-no-wrap">
+                                                    <div className="ml-3">
+                                                        <p className="text-gray-900 whitespace-no-wrap">
                                                             {ele.transactionHash}
                                                         </p>
                                                     </div>
                                                 </div>
                                             </td> */}
-                                            <td class="px-5 py-5 border-b border-gray-700 bg-gray-800 text-sm">
-                                                <p class="text-gray-200 whitespace-no-wrap">{ele.to}</p>
-                                            </td>
-                                            <td class="px-5 py-5 border-b border-gray-700 bg-gray-800  text-sm">
-                                                <p class="text-gray-200 whitespace-no-wrap">
+                                        <td className="px-5 py-5 border-b border-gray-700 bg-gray-800 text-sm">
+                                            <p className="text-gray-200 whitespace-no-wrap">{ele.to}</p>
+                                        </td>
+                                        <td className="px-5 py-5 border-b border-gray-700 bg-gray-800  text-sm">
+                                            <p className="text-gray-200 whitespace-no-wrap">
                                                 {ele.tokenId}
-                                                </p>
-                                            </td>
-                                            <td class="px-5 py-5 border-b border-gray-700 bg-gray-800  text-sm">
-                                                <p class="text-gray-200 whitespace-no-wrap">
+                                            </p>
+                                        </td>
+                                        <td className="px-5 py-5 border-b border-gray-700 bg-gray-800  text-sm">
+                                            <p className="text-gray-200 whitespace-no-wrap">
                                                 {ele.transactionHash}
-                                                </p>
-                                            </td>
-                                            <td class="px-5 py-5 border-b  border-gray-700 bg-gray-800  text-sm">
-                                                <span
-                                                    class="relative inline-block px-3 py-1 font-semibold text-green-900 leading-tight">
-                                                    <span aria-hidden
-                                                        class="absolute inset-0 bg-green-200 opacity-50 rounded-full"></span>
-                                                    <span class="relative">{ele.blockTimestamp}</span>
-                                                </span>
-                                            </td>
-                                            <td class="px-5 py-5 border-b  border-gray-700 bg-gray-800  text-sm">
-                                                <span
-                                                    class="relative inline-block px-3 py-1 font-semibold text-green-900 leading-tight">
-                                                    <span aria-hidden
-                                                        class="absolute inset-0 bg-green-200 opacity-50 rounded-full"></span>
-                                                    <span class="relative">{ele.blockNumber}</span>
-                                                </span>
-                                            </td>
-                                        </tr>
-                                    })}
+                                            </p>
+                                        </td>
+                                        <td className="px-5 py-5 border-b  border-gray-700 bg-gray-800  text-sm">
+                                            <span
+                                                className="relative inline-block px-3 py-1 font-semibold text-green-900 leading-tight">
+                                                <span aria-hidden
+                                                    className="absolute inset-0 bg-green-200 opacity-50 rounded-full"></span>
+                                                <span className="relative">{ele.blockTimestamp}</span>
+                                            </span>
+                                        </td>
+                                        <td className="px-5 py-5 border-b  border-gray-700 bg-gray-800  text-sm">
+                                            <span
+                                                className="relative inline-block px-3 py-1 font-semibold text-green-900 leading-tight">
+                                                <span aria-hidden
+                                                    className="absolute inset-0 bg-green-200 opacity-50 rounded-full"></span>
+                                                <span className="relative">{ele.blockNumber}</span>
+                                            </span>
+                                        </td>
+                                    </tr>
+                                })}
 
 
-                                </tbody>
-                            </table>
-                            <div
-                                class="px-5 py-5 border-gray-900 bg-gray-700 border-t flex flex-col xs:flex-row items-center xs:justify-between          ">
-                                <span class="text-xs xs:text-sm text-gray-900">
-                                    Showing 1 to 4 of 50 Entries
-                                </span>
-                                <div class="inline-flex mt-2 xs:mt-0">
-                                    <button
-                                        class="text-sm text-indigo-50 transition duration-150 hover:bg-indigo-500 bg-indigo-600 font-semibold py-2 px-4 rounded-l">
-                                        Prev
-                                    </button>
-                                    &nbsp; &nbsp;
-                                    <button
-                                        class="text-sm text-indigo-50 transition duration-150 hover:bg-indigo-500 bg-indigo-600 font-semibold py-2 px-4 rounded-r">
-                                        Next
-                                    </button>
-                                </div>
+                            </tbody>
+                        </table>
+                        <div
+                            className="px-5 py-5 border-gray-900 bg-gray-700 border-t flex flex-col xs:flex-row items-center xs:justify-between          ">
+                            <span className="text-xs xs:text-sm text-gray-900">
+                                Showing 1 to 4 of 50 Entries
+                            </span>
+                            <div className="inline-flex mt-2 xs:mt-0">
+                                <button
+                                    className="text-sm text-indigo-50 transition duration-150 hover:bg-indigo-500 bg-indigo-600 font-semibold py-2 px-4 rounded-l">
+                                    Prev
+                                </button>
+                                &nbsp; &nbsp;
+                                <button
+                                    className="text-sm text-indigo-50 transition duration-150 hover:bg-indigo-500 bg-indigo-600 font-semibold py-2 px-4 rounded-r">
+                                    Next
+                                </button>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
         </div>
     )
 }

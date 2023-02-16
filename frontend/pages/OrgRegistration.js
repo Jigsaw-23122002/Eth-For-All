@@ -87,7 +87,7 @@ function OrgRegistration() {
         <div className="grid gap-6 md:grid-cols-2">
           <div>
             <label
-              htmlFor="username"
+              htmlhtmlFor="username"
               className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
             >
               Organization name
@@ -123,7 +123,7 @@ function OrgRegistration() {
           </div>
           <div>
             <label
-              htmlFor="phone"
+              htmlhtmlFor="phone"
               className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
             >
               Organization contact no.
@@ -159,7 +159,7 @@ function OrgRegistration() {
           </div>
           <div>
             <label
-              htmlFor="password"
+              htmlhtmlFor="password"
               className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
             >
               Password
@@ -194,7 +194,7 @@ function OrgRegistration() {
           </div>
           <div>
             <label
-              htmlFor="confirm_password"
+              htmlhtmlFor="confirm_password"
               className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
             >
               Confirm Password
@@ -230,7 +230,7 @@ function OrgRegistration() {
         </div>
         <div className="mb-6">
           <label
-            htmlFor="input-group-1"
+            htmlhtmlFor="input-group-1"
             className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
           >
             Organization email
@@ -263,7 +263,7 @@ function OrgRegistration() {
         <div {...getRootProps({ className: "dropzone" })}>
           <div className="flex items-center justify-center w-full my-8">
             <label
-              htmlFor="dropzone-file"
+              htmlhtmlFor="dropzone-file"
               className="flex flex-col items-center justify-center w-full h-35 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
             >
               <div className="flex flex-col items-center justify-center pt-5 pb-6">
