@@ -38,6 +38,7 @@ contract Charity {
         address org_address;
         string doc_cid;
         string desc;
+        string name;
         uint256 upvotes;
         uint256 downvotes;
         address[] upvoters;
@@ -94,7 +95,7 @@ contract Charity {
   admin = msg.sender;
         stakeToBeDistributed = 5 * 10**17;
         registeredViolations = 0;
-        registerOrg(msg.sender,"Owner","None","Description",block.timestamp);
+        registerOrg("Owner","None","Description",block.timestamp);
         orgIdentifier[msg.sender].verification_status = true;
         orgIdentifier[msg.sender].isStakePaid = true;
     }
@@ -162,7 +163,7 @@ contract Charity {
         OrgDetails[] memory verified_org = new OrgDetails[](verified_org_cnt);
         for (uint256 i = 0; i < len; i++) {
             address org_addr = organizationAddress[i];
-            if (orgIdentifier[org_addr].verification_status  &&
+            if (!violationAddressMap[org_addr].isViolated  && orgIdentifier[org_addr].verification_status  &&
                 orgIdentifier[organizationAddress[i]].isStakePaid) {
                 Organization storage new_org = orgIdentifier[org_addr];
                 OrgDetails memory new_org_det = OrgDetails({
@@ -257,16 +258,18 @@ contract Charity {
 
     // Function to register the organization onto the website.
     function registerOrg(
-        address organization_address,
+        
         string memory organization_name,
         string memory document_cid,
         string memory description,
         uint256 time
     ) public {
+        address organization_address = msg.sender;
         require(
             orgIdentifier[organization_address].application_time == 0,
             "Organization already registered!"
         );
+        
 
         orgIdentifier[organization_address].org_address = organization_address;
         orgIdentifier[organization_address].name = organization_name;
@@ -343,7 +346,7 @@ contract Charity {
     //     return status;
     // }
     // Function to distribute the stake to the companies in favour.
-    
+
     function distributeStake(address org_address, bool category) public {
         if (category) {
             uint256 sum = 0;
@@ -515,6 +518,7 @@ contract Charity {
         address organization_address,
         string memory document_cid,
         string memory description,
+        string memory name,
         uint256 registration_time
     ) public {
         Violation memory vio;
@@ -523,11 +527,16 @@ contract Charity {
         vio.org_address = organization_address;
         vio.doc_cid = document_cid;
         vio.desc = description;
+        vio.name = name;
         vio.start_time = registration_time;
         vio.end_time = registration_time + 5 days;
         vio.isOpen = true;
         vio.isViolated = true;
+        vio.upvotes = 0;
+        vio.downvotes = 0 ;
+
         violationsRegistered.push(vio);
+        violationAddressMap[organization_address] = vio;
         
         violationMap[registeredViolations] = vio;
         registeredViolations = registeredViolations + 1;
@@ -550,20 +559,21 @@ contract Charity {
         uint256 cnt = 0;
         for (uint256 i = 0; i < registeredViolations; i++) {
             address org_addr = violationsRegistered[i].org_address;
-            if(violationsRegistered[i].isOpen)
+            if(violationAddressMap[org_addr].isOpen && violationAddressMap[org_addr].isViolated)
             {   Violation memory new_vio = Violation({
-                    id: violationsRegistered[i].id,
-                    org_address: violationsRegistered[i].org_address,
-                    desc: violationsRegistered[i].desc,
-                    doc_cid: violationsRegistered[i].doc_cid,
-                    upvotes: violationsRegistered[i].upvotes,
-                    downvotes:violationsRegistered[i].downvotes,
-                    upvoters:violationsRegistered[i].upvoters,
-                    downvoters: violationsRegistered[i].downvoters,
-                    isOpen: violationsRegistered[i].isOpen,
-                    start_time: violationsRegistered[i].start_time,
-                    end_time: violationsRegistered[i].end_time,
-                    isViolated: violationsRegistered[i].isViolated
+                    id: violationAddressMap[org_addr].id,
+                    name: violationAddressMap[org_addr].name,
+                    org_address: violationAddressMap[org_addr].org_address,
+                    desc: violationAddressMap[org_addr].desc,
+                    doc_cid: violationAddressMap[org_addr].doc_cid,
+                    upvotes: violationAddressMap[org_addr].upvotes,
+                    downvotes:violationAddressMap[org_addr].downvotes,
+                    upvoters:violationAddressMap[org_addr].upvoters,
+                    downvoters: violationAddressMap[org_addr].downvoters,
+                    isOpen: violationAddressMap[org_addr].isOpen,
+                    start_time: violationAddressMap[org_addr].start_time,
+                    end_time: violationAddressMap[org_addr].end_time,
+                    isViolated: violationAddressMap[org_addr].isViolated
                 });
                 violationList[cnt] = new_vio;
                 cnt += 1;
@@ -580,12 +590,19 @@ contract Charity {
         violationMap[index].upvoters.push(msg.sender);
         violation_voters[index][msg.sender] = 1;
     }
+    function violationUpVoteCount(uint256 index) public view returns(uint256){
+        return violationMap[index].upvotes;
+    }
 
     // Function used for downvoting the violations of the organization.
     function violationDownVote(uint256 index) public {
         violationMap[index].downvotes = violationMap[index].downvotes + 1;
         violationMap[index].downvoters.push(msg.sender);
         violation_voters[index][msg.sender] = 2;
+    }
+
+    function violationDownVoteCount(uint256 index) public view returns(uint256){
+        return violationMap[index].downvotes;
     }
 
     // Function used to return the array of the violations whose time for voting is over.
@@ -608,13 +625,18 @@ contract Charity {
 
     // Function to be called once the voting period of violation is finished.
     function setViolationStatus(uint256 index) public {
+        address  org_addr = violationMap[index].org_address;
         uint256 totalVotes = violationMap[index].upvotes +
             violationMap[index].downvotes;
         if (violationMap[index].upvotes * 100 >= totalVotes * 51) {
+            violationAddressMap[org_addr].isViolated = true;
             violationMap[index].isViolated = true;
+            verified_org_cnt-=1;
         } else {
+            violationAddressMap[org_addr].isViolated = true;
             violationMap[index].isViolated = false;
         }
+        violationAddressMap[org_addr].isOpen = false;
         violationMap[index].isOpen = false;
     }
 
@@ -863,7 +885,6 @@ contract Charity {
     }
 }
 
-
 // Algorithm
 // time of registration = 1400 (12.00 pm)
 // 12 hrs adds 1000 to system time.
@@ -897,4 +918,3 @@ contract Charity {
 //    1) checkFinancialReportStatus
 //    2) upvotedOnFinancialReport
 //    3) RemoveCharityIfFinancialReportFraud(org_address);
-

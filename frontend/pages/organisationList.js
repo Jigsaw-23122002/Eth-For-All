@@ -132,7 +132,7 @@ export default function organisationList() {
         <>
         
 
-          <button className="bg-white" onClick={getSetOfUnverifiedOrgs}>
+          <button className="bg-gray-900" onClick={getSetOfUnverifiedOrgs}>
             Unverified Orgs.
           </button>
           {/* {data && <pre className='text-white'>{JSON.stringify(data)}</pre>} */}
@@ -155,7 +155,7 @@ export default function organisationList() {
       connectWallet();
     }
   }, [walletConnected]);
-  getSetOfUnverifiedOrgs();
+  // getSetOfUnverifiedOrgs();
   // useEffect(() => {
     // getSetOfUnverifiedOrgs();
   // });
@@ -168,7 +168,7 @@ export default function organisationList() {
         </h2>
         <hr className="w-1/4 h-1 mx-auto my-4 bg-gray-600 border-0 rounded md:my-10 dark:bg-gray-700"></hr>
         {/* <div className='bg-red-200'> */}
-        {/* {renderButton()} */}
+        {renderButton()}
         {/* </div> */}
 
         <ul className="w-3/4 p-12">

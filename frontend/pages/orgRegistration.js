@@ -84,7 +84,7 @@ function OrgRegistration() {
     const cid = await storage.put(files);
     console.log("Content added with CID:", cid);
     setcid_org(cid)
-    getReg()
+    await getReg()
     setConfirmModal(false);
   }
   const getProviderOrSigner = async (needSigner) => {
