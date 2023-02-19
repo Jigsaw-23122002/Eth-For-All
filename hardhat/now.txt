@@ -1,0 +1,19 @@
+hi I have checked all the enviornment variables
+NODE_ENV=dev
+
+APP_ID=“Ky5U0w45UsFaLAB5xOOF2865JwXdgFs2ujX2krBD”
+
+API_URL=“https://deep-index.moralis.io/api-docs/#/storage/uploadFolder”
+
+API_KEY=“myapikey in here”
+
+SERVER_URL=“https://wimlepcpcnuo.usemoralis.com:2053/server 5”
+
+MASTER_KEY=“my master key in here”
+
+thank you! here was the error
+i was using the wrong API_url
+“https://deep-index.moralis.io/api-docs/#/storage/uploadFolder 9”
+i have change it to
+API_URL=“https://deep-index.moralis.io/api/v2/ipfs/uploadFolder 4”
+

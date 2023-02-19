@@ -1,15 +1,19 @@
-import "../styles/globals.css";
+import '../styles/globals.css'
+import { MoralisProvider } from "react-moralis";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 
 function MyApp({ Component, pageProps }) {
-  return (
-    <div>
+  return (<div className='bg-black'>
+    <MoralisProvider initializeOnMount={false}>
       <Header />
       <Component {...pageProps} />
       <Footer />
-    </div>
-  );
+    </MoralisProvider>
+  </div>);
+
+
 }
 
-export default MyApp;
+export default MyApp
+
