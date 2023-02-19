@@ -6,12 +6,15 @@ import VerifiedOrganisation from './verifiedOrgs.js'
 import 'flowbite';
 import ReportedOrgDet from './reportedOrgDet.js';
 import { REGISTER_CONTRACT_ADDRESS, abi } from "../constants/index.js";
+import { useRouter } from 'next/router.js';
 
 
 export default function reportedOrgsList() {
     // const [orgsList, setorgsList] = useState([{ cid: 'bafybeieo76izxgib3xu5bwsrjnoolylmp2pdoigkmhomqe5dnbysmisfee', upVotes: 26, downVotes: 5, view: 56, name: 'Alexander S. Onassis Foundation' }, { cid: 'bafybeieo76izxgib3xu5bwsrjnoolylmp2pdoigkmhomqe5dnbysmisfee', upVotes: 26, downVotes: 5, view: 56, name: 'The Alliance for Safe Children' }, { cid: 'bafybeieo76izxgib3xu5bwsrjnoolylmp2pdoigkmhomqe5dnbysmisfee', upVotes: 26, downVotes: 5, view: 56, name: 'Asbestos Disease Awareness Organization' }, { cid: 'bafybeieo76izxgib3xu5bwsrjnoolylmp2pdoigkmhomqe5dnbysmisfee', upVotes: 26, downVotes: 5, view: 56, name: 'Cardiac Risk in the Young' }, { cid: 'bafybeieo76izxgib3xu5bwsrjnoolylmp2pdoigkmhomqe5dnbysmisfee', upVotes: 26, downVotes: 5, view: 56, name: 'The Crohn\'s and Colitis Foundation of Canada' }, { cid: 'bafybeieo76izxgib3xu5bwsrjnoolylmp2pdoigkmhomqe5dnbysmisfee', upVotes: 26, downVotes: 5, view: 56, name: 'Global Village Foundation' }, { cid: 'bafybeieo76izxgib3xu5bwsrjnoolylmp2pdoigkmhomqe5dnbysmisfee', upVotes: 26, downVotes: 5, view: 56, name: 'International Republican Institute' }, { cid: 'bafybeieo76izxgib3xu5bwsrjnoolylmp2pdoigkmhomqe5dnbysmisfee', upVotes: 26, downVotes: 5, view: 56, name: 'Ratanak International' }, { cid: 'bafybeieo76izxgib3xu5bwsrjnoolylmp2pdoigkmhomqe5dnbysmisfee', upVotes: 26, downVotes: 5, view: 56, name: 'Realdania' }])
     const [orgsList, setorgsList] = useState([]);
     const [loading, setLoading] = useState(false);
+    const router = useRouter();
+    
 
     const web3ModalRef = useRef();
     const [walletConnected, setWalletConnected] = useState(false);
@@ -50,7 +53,7 @@ export default function reportedOrgsList() {
             console.error(error);
         }
     };
-    
+
     // useEffect(() => {
     // }, [orgsList])
     // getSetOfVerifiedOrgs();

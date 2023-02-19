@@ -8,13 +8,13 @@ import { REGISTER_CONTRACT_ADDRESS, abi } from '../constants/index.js';
 import 'flowbite'
 
 
-export default function reportOrg({query}) {
+export default function reportOrg({ query }) {
   const [cidValue, setcidValue] = useState("")
   const [description, setdescription] = useState("")
   const [orgAddress, setorgAddress] = useState("")
   const [orgDesc, setorgDesc] = useState("")
   const [orgtime, setorgtime] = useState("")
-
+  const router = useRouter();
   function getAccessToken() {
     return process.env.NEXT_PUBLIC_WEB3STORAGE_TOKEN
   }
@@ -63,10 +63,10 @@ export default function reportOrg({query}) {
     return web3Provider;
   };
 
-  const getInfo = async() =>{
+  const getInfo = async () => {
     console.log(orgAddress)
     console.log(cidValue)
-    console.log(orgDesc )
+    console.log(orgDesc)
     console.log(orgtime)
   }
 
@@ -78,14 +78,15 @@ export default function reportOrg({query}) {
     const cid_of_report = await storeFiles();
     const signer = await getProviderOrSigner(true);
     const reportContract = new Contract(REGISTER_CONTRACT_ADDRESS, abi, signer);
-    const regViolation = await reportContract.registerViolation(query.org_address, cid_of_report, description, timeNow);
-    await regViolation.wait(3);
+    const regViolation = await reportContract.registerViolation(query.org_address, cid_of_report, description, query.name, timeNow);
+    await regViolation.wait();
+    router.replace({ pathname: "/reportedOrgsList" })
     setorgAddress(query.org_address)
     setcidValue(cid_of_report)
     setorgDesc(description)
     setorgtime(timeNow)
     console.log("done")
-    
+
   }
 
   return (

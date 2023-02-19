@@ -1,5 +1,5 @@
 export const REGISTER_CONTRACT_ADDRESS =
-  "0x0E93080C715161174021A4a7138DA5E36cfb2f4b";
+  "0x950f120C4b625e072e886c7478dC58982a4cE5eB";
 
 export const abi = [
   {
@@ -431,6 +431,11 @@ export const abi = [
             "type": "string"
           },
           {
+            "internalType": "string",
+            "name": "name",
+            "type": "string"
+          },
+          {
             "internalType": "uint256",
             "name": "upvotes",
             "type": "uint256"
@@ -557,11 +562,6 @@ export const abi = [
   {
     "inputs": [
       {
-        "internalType": "address",
-        "name": "organization_address",
-        "type": "address"
-      },
-      {
         "internalType": "string",
         "name": "organization_name",
         "type": "string"
@@ -602,6 +602,11 @@ export const abi = [
       {
         "internalType": "string",
         "name": "description",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "name",
         "type": "string"
       },
       {
@@ -894,9 +899,47 @@ export const abi = [
         "type": "uint256"
       }
     ],
+    "name": "violationDownVoteCount",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "index",
+        "type": "uint256"
+      }
+    ],
     "name": "violationUpVote",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "index",
+        "type": "uint256"
+      }
+    ],
+    "name": "violationUpVoteCount",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {

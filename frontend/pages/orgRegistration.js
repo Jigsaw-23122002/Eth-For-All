@@ -1,20 +1,32 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { ThemeProvider } from "next-themes";
 import { useDropzone } from "react-dropzone";
 import { Web3Storage } from "web3.storage";
+import "flowbite";
+import Web3Modal from "web3modal";
+import { providers, Contract } from "ethers";
+import { REGISTER_CONTRACT_ADDRESS, abi } from "../constants/index.js";
+import { useRouter } from "next/router.js";
 
 let files = [];
 
 function OrgRegistration() {
   const { getRootProps, getInputProps } = useDropzone({});
+  const router = useRouter();
   const [username, setUsername] = useState("");
   const [phone, setPhone] = useState("");
   const [pwd, setPwd] = useState("");
   const [cnfPwd, setCnfPwd] = useState("");
-  const [email, setEmail] = useState("");
+  const [details, setdetails] = useState("");
   const [errorModal, setErrorModal] = useState(false);
   const [confirmModal, setConfirmModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [cid_org, setcid_org] = useState("");
+  const [orgsList, setorgsList] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  const web3ModalRef = useRef();
+  const [walletConnected, setWalletConnected] = useState(false);
 
   function selectFile(e) {
     var file = e.target.files[0];
@@ -34,9 +46,6 @@ function OrgRegistration() {
       openErrorModal();
     } else if (phone.length !== 10) {
       setErrorMessage("Phone number should be of 10 digits");
-      openErrorModal();
-    } else if (email.substr(email.length - 10) !== "@gmail.com") {
-      setErrorMessage("The email entered does not match the standard format");
       openErrorModal();
     } else if (pwd !== cnfPwd) {
       setErrorMessage("The password and its confirmation does not match");
@@ -74,10 +83,51 @@ function OrgRegistration() {
     console.log(`Uploading ${files.length} files`);
     const cid = await storage.put(files);
     console.log("Content added with CID:", cid);
-
+    setcid_org(cid)
+    getReg()
     setConfirmModal(false);
   }
+  const getProviderOrSigner = async (needSigner) => {
+    web3ModalRef.current = new Web3Modal({
+      network: "goerli",
+      providerOptions: {},
+      disableInjectedProvider: false,
+    });
+    const provider = await web3ModalRef.current.connect();
+    const web3Provider = new providers.Web3Provider(provider);
 
+    const { chainId } = await web3Provider.getNetwork();
+    if (chainId !== 5) {
+      window.alert("Change the network to Goerli");
+      throw new Error("Change network to Goerli");
+    }
+    if (needSigner) {
+      const signer = web3Provider.getSigner();
+      console.log("Done signer");
+      return signer;
+    }
+    console.log("Done provider");
+    return web3Provider;
+  }
+  const getReg = async () => {
+    try {
+      const signer = await getProviderOrSigner(true);
+      const regContract = new Contract(REGISTER_CONTRACT_ADDRESS, abi, signer);
+      console.log("Inside the contract methods")
+      const today = new Date();
+      const timeNow = Math.floor((today.getTime()) / 1000);
+      console.log(timeNow);
+      const getregistered = await regContract.registerOrg(username, cid_org, details, timeNow);
+      console.log("Completed reg")
+      await getregistered.wait()
+      const unverifiedOrgDet = await getSetOfUnverifiedOrgs();
+      console.log("Done reg")
+      router.push({pathname:'/organisationList'});
+    } catch (error) {
+
+    }
+
+  };
   return (
     <ThemeProvider attribute="class">
       <form className="m-5 p-5 dark:bg-gray-900 rounded-xl">
@@ -233,30 +283,23 @@ function OrgRegistration() {
             htmlhtmlFor="input-group-1"
             className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
           >
-            Organization email
+            Organization Description
           </label>
           <div className="relative mb-6">
             <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-              <svg
-                aria-hidden="true"
-                className="w-5 h-5 text-gray-500 dark:text-gray-400"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"></path>
-                <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"></path>
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6 text-blue-600">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" />
               </svg>
             </div>
             <input
               type="text"
               id="input-group-1"
-              value={email}
+              value={details}
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               onChange={(e) => {
-                setEmail(e.target.value);
+                setdetails(e.target.value);
               }}
-              placeholder="charitable@gmail.com"
+              placeholder="Enter abt your org .. "
             />
           </div>
         </div>

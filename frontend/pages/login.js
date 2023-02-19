@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 import { ThemeProvider } from "next-themes";
+import { useRouter } from "next/router";
 
 function Login() {
   const userType = ["Organization", "Donar", "End-User"];
-  const [email, setEmail] = useState("");
+  const [name, setname] = useState("");
   const [pwd, setPwd] = useState("");
   const [type, setType] = useState("");
   const [modal, setModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const router = useRouter();
 
   function openModal() {
     setModal(true);
@@ -17,12 +19,7 @@ function Login() {
   }
 
   function checkForm() {
-    if (email.substr(email.length - 10) !== "@gmail.com") {
-      setErrorMessage(
-        "Enter the valid email address for logging into the system"
-      );
-      openModal();
-    } else if (pwd === "") {
+     if (pwd === "") {
       setErrorMessage("Enter the password for logging into the system");
       openModal();
     } else if (type === "") {
@@ -45,30 +42,23 @@ function Login() {
                 htmlhtmlFor="input-group-1"
                 className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
               >
-                Email
+                Name
               </label>
               <div className="relative mb-6">
                 <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                  <svg
-                    aria-hidden="true"
-                    className="w-5 h-5 text-gray-500 dark:text-gray-400"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"></path>
-                    <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"></path>
-                  </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6 text-blue-600">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" />
+              </svg>
                 </div>
                 <input
                   type="text"
                   id="input-group-1"
-                  value={email}
+                  value={name}
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   onChange={(e) => {
-                    setEmail(e.target.value);
+                    setname(e.target.value);
                   }}
-                  placeholder="charitable@gmail.com"
+                  placeholder="Enter your org name"
                 />
               </div>
             </div>
@@ -147,7 +137,7 @@ function Login() {
                   htmlFor="green-radio"
                   className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                 >
-                  Donar
+                  Donor
                 </label>
               </div>
               <div className="flex items-center mr-4">
@@ -172,7 +162,7 @@ function Login() {
             <button
               type="button"
               className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 w-full"
-              onClick={() => checkForm()}
+              onClick={() => {checkForm();router.push({pathname:'/organisationList'});}}
             >
               Login
             </button>
