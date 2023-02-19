@@ -14,7 +14,7 @@ export default function reportedOrgsList() {
     const [orgsList, setorgsList] = useState([]);
     const [loading, setLoading] = useState(false);
     const router = useRouter();
-    
+
 
     const web3ModalRef = useRef();
     const [walletConnected, setWalletConnected] = useState(false);
@@ -60,25 +60,77 @@ export default function reportedOrgsList() {
 
     return (
         <div>
-        <div className=' bg-black '>
-            <button className="bg-white" onClick={getSetOfReportedOrgs}>
-                Reg Org.
-            </button>
-            <div className='h-auto py-3 flex flex-col items-center '>
-                <h2 className="text-3xl font-extrabold text-white">List of Reported Organisations </h2>
-                <hr className="w-1/4 h-1 mx-auto my-4 bg-gray-600 border-0 rounded md:my-10 dark:bg-gray-700">
-                </hr>
-                <div className='grid lg:grid-cols-3 md:grid-cols-2'>
-                    {
-                        orgsList.map((element) => {
-                            return <ReportedOrgDet key={element.name} element={element} />
-                        })
-                    }
+            <div className=' bg-black '>
+                <button className="bg-gray-900" onClick={getSetOfReportedOrgs}>
+                    Reg Org.
+                </button>
+                <div className='h-auto py-3 flex flex-col items-center '>
+                    <h2 className="text-3xl font-extrabold text-white">List of Reported Organisations </h2>
+                    <hr className="w-1/4 h-1 mx-auto my-4 bg-gray-600 border-0 rounded md:my-10 dark:bg-gray-700">
+                    </hr>
+                    <div className='grid lg:grid-cols-3 md:grid-cols-2'>
+                        <div className='m-6'>
+                            <div className="relative group h-full ">
+                                <div className="absolute -inset-0 bg-gradient-to-r from-blue-600 to-gray-600 0 rounded-lg blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200">
+                                </div>
+                                <div className="max-w-sm h-full p-6 m-2 my-5 relative bg-black rounded-lg leading-none">
+                                    <div>
+                                        <h5 className="mb-2 text-2xl font-bold tracking-tight text-white">Org rep 0</h5>
+                                    </div>
+                                    <div className="mb-3 font-normal text-white">Fraud Org check page 3
+                                    </div>
+
+                                    <button className="absolute m-2 bottom-2 inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-transparent border border-white rounded-lg group-hover:bg-gradient-to-r from-blue-600 to-gray-600 ">
+                                        Read More
+                                        <svg aria-hidden="true" className="w-4 h-4 ml-2 -mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd"></path></svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div className='m-6'>
+                            <div className="relative group h-full ">
+                                <div className="absolute -inset-0 bg-gradient-to-r from-blue-600 to-gray-600 0 rounded-lg blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200">
+                                </div>
+                                <div className="max-w-sm h-full p-6 m-2 my-5 relative bg-black rounded-lg leading-none">
+                                    <div>
+                                        <h5 className="mb-2 text-2xl font-bold tracking-tight text-white">Org Rep 2</h5>
+                                    </div>
+                                    <div className="mb-3 font-normal text-white">Fraud Org  </div>
+
+                                    <button className="absolute m-2 bottom-2 inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-transparent border border-white rounded-lg group-hover:bg-gradient-to-r from-blue-600 to-gray-600 ">
+                                        Read More
+                                        <svg aria-hidden="true" className="w-4 h-4 ml-2 -mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd"></path></svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div className='m-6'>
+                            <div className="relative group h-full ">
+                                <div className="absolute -inset-0 bg-gradient-to-r from-blue-600 to-gray-600 0 rounded-lg blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200">
+                                </div>
+                                <div className="max-w-sm h-full p-6 m-2 my-5 relative bg-black rounded-lg leading-none">
+                                    <div>
+                                        <h5 className="mb-2 text-2xl font-bold tracking-tight text-white">Org Rep 5</h5>
+                                    </div>
+                                    <div className="mb-3 font-normal text-white">Fraud Org check pg 1</div>
+
+                                    <button className="absolute m-2 bottom-2 inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-transparent border border-white rounded-lg group-hover:bg-gradient-to-r from-blue-600 to-gray-600 ">
+                                        Read More
+                                        <svg aria-hidden="true" className="w-4 h-4 ml-2 -mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd"></path></svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        {
+                            orgsList.map((element) => {
+                                return <ReportedOrgDet key={element.name} element={element} />
+                            })
+                        }
+
+                    </div>
 
                 </div>
-
             </div>
         </div>
-    </div>
     )
 }

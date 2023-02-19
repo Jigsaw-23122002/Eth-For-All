@@ -8,12 +8,12 @@ import { Eth, EthColored } from "@web3uikit/icons";
 import { formatEther } from "ethers/lib/utils.js";
 
 export default function checkStatus() {
-    const [orgsList, setorgsList] = useState([]);
+    const [status, setstatus] = useState(false);
     // const [orgsList, setorgsList] = useState([{ doc_cid: 'bafybeieo76izxgib3xu5bwsrjnoolylmp2pdoigkmhomqe5dnbysmisfee', upvotes: 26, downvotes: 5, view: 56, name: 'Alexander S. Onassis Foundation' }, { doc_cid: 'bafybeieo76izxgib3xu5bwsrjnoolylmp2pdoigkmhomqe5dnbysmisfee', upvotes: 26, downvotes: 5, view: 56, name: 'The Alliance' }, { doc_cid: 'bafybeieo76izxgib3xu5bwsrjnoolylmp2pdoigkmhomqe5dnbysmisfee', upvotes: 26, downvotes: 5, view: 56, name: 'Asbestos Disease Awareness Organization' }, { doc_cid: 'bafybeieo76izxgib3xu5bwsrjnoolylmp2pdoigkmhomqe5dnbysmisfee', upvotes: 26, downvotes: 5, view: 56, name: 'Cardiac Risk in the Young' }, { doc_cid: 'bafybeieo76izxgib3xu5bwsrjnoolylmp2pdoigkmhomqe5dnbysmisfee', upvotes: 26, downvotes: 5, view: 56, name: 'The Crohn\'s and Colitis Foundation of Canada' }, { doc_cid: 'bafybeieo76izxgib3xu5bwsrjnoolylmp2pdoigkmhomqe5dnbysmisfee', upvotes: 26, downvotes: 5, view: 56, name: 'Global Village Foundation' }, { doc_cid: 'bafybeieo76izxgib3xu5bwsrjnoolylmp2pdoigkmhomqe5dnbysmisfee', upvotes: 26, downvotes: 5, view: 56, name: 'International Republican Institute' }, { doc_cid: 'bafybeieo76izxgib3xu5bwsrjnoolylmp2pdoigkmhomqe5dnbysmisfee', upvotes: 26, downvotes: 5, view: 56, name: 'Ratanak International' }, { doc_cid: 'bafybeieo76izxgib3xu5bwsrjnoolylmp2pdoigkmhomqe5dnbysmisfee', upvotes: 26, downvotes: 5, view: 56, name: 'Realdania' }])
     const [loading, setLoading] = useState(false);
 
     const web3ModalRef = useRef();
-    let status = false;
+    
 
     const getProviderOrSigner = async (needSigner) => {
         web3ModalRef.current = new Web3Modal({
@@ -42,7 +42,7 @@ export default function checkStatus() {
         const regContract = new Contract(REGISTER_CONTRACT_ADDRESS, abi, signer);
         const unverifiedOrgs = await regContract.checkVerificationStatus();
         await unverifiedOrgs.wait();
-        status = unverifiedOrgs;
+        setstatus(unverifiedOrgs);
 
     }
     const payStake = async () => {
@@ -56,8 +56,8 @@ export default function checkStatus() {
                 params: [
                     {
                         from: '0xCc673eE49Eb916b33919294D39F0518FdC0DaF0f',
-                        to: '0x1b01AAbCD468e5a8fb4F0D1f67CC96Fe09c2be59',
-                        value: '10000000000000'
+                        to: REGISTER_CONTRACT_ADDRESS,
+                        value: '1000000000000'
 
                     },
                 ],
@@ -76,7 +76,7 @@ export default function checkStatus() {
         </h2>
         <hr className="w-1/4 h-1 mx-auto my-4 bg-gray-600 border-0 rounded md:my-10 dark:bg-gray-700"></hr>
         
-            {status ?
+            {!status ?
                 (<><div>
                     
                 </div>

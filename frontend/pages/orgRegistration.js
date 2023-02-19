@@ -85,7 +85,7 @@ function OrgRegistration() {
     console.log("Content added with CID:", cid);
     setcid_org(cid)
     await getReg()
-    setConfirmModal(false);
+    // setConfirmModal(false);
   }
   const getProviderOrSigner = async (needSigner) => {
     web3ModalRef.current = new Web3Modal({
@@ -120,7 +120,6 @@ function OrgRegistration() {
       const getregistered = await regContract.registerOrg(username, cid_org, details, timeNow);
       console.log("Completed reg")
       await getregistered.wait()
-      const unverifiedOrgDet = await getSetOfUnverifiedOrgs();
       console.log("Done reg")
       router.push({pathname:'/organisationList'});
     } catch (error) {
@@ -129,8 +128,8 @@ function OrgRegistration() {
 
   };
   return (
-    <ThemeProvider attribute="class">
-      <form className="m-5 p-5 dark:bg-gray-900 rounded-xl">
+    <div className=" bg-gray-900 ">
+      <form className="m-5 p-5 bg-gray-900 rounded-xl">
         <h5 className="text-xl font-medium text-gray-900 dark:text-white mb-5">
           Register your organization to our platform
         </h5>
@@ -494,7 +493,7 @@ function OrgRegistration() {
       ) : (
         <div></div>
       )}
-    </ThemeProvider>
+    </div>
   );
 }
 
