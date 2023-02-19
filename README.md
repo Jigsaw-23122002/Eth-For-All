@@ -26,6 +26,7 @@ The Charity on registration is listed under Unverified Organisation. These Organ
 <br>
 By incorporating blockchain into recording charitable donations, donors will be able to track exactly where their donations go and when they are put into use. Blockchain will provide greater transparency behind nonprofit organizations and give both donors and operators greater accountability when it comes to how donations are spent. By utilizing blockchain technology in tracking, storing, and authenticating donations, donors are able to verify their donations themselves and keep tabs on exactly how their money is used.
 <br>
+<br>
 Blockchain furthers the trust that donors have in charities by enabling greater visibility of charitable transactions. If an Organisation is found suspicious then the donors can report them. This further causes an organisation to be listed under the Reported Organisations section. The validation of the report is further done by the verified organisation. If an organisation receives more than 51% upvotes for the validation of a report they are termed as fraud and their staked amount is taken off. For verifying each Organisation the verified organisations receive some amount from their stake.
  
  
