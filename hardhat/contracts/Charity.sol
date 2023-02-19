@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT
+// SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.9;
 
 contract Charity {
@@ -70,6 +70,7 @@ contract Charity {
     mapping(address => bool) verifiedOrgMap;
     mapping(address => bool) temp;
     mapping(uint256 => Violation) violationMap;
+    mapping(address => Violation) violationAddressMap;
     mapping(address => FinancialReport) financialReportMap;
 
     address[] organizationAddress;
@@ -78,6 +79,7 @@ contract Charity {
     address[] finishedVotes;
     uint256[] finishedViolationVotes;
     address[] financialReportsAddress;
+    Violation[] violationsRegistered;
     address[] notSubmitFRAddress;
     address public admin;
 
@@ -89,12 +91,11 @@ contract Charity {
     FinancialReport[] listFinancialReports;
 
     constructor() {
-        admin = msg.sender;
-        stakeToBeDistributed = 5 * 10 ** 17;
+  admin = msg.sender;
+        stakeToBeDistributed = 5 * 10**17;
         registeredViolations = 0;
         registerOrg(msg.sender,"Owner","None","Description",block.timestamp);
         orgIdentifier[msg.sender].verification_status = true;
-       
         orgIdentifier[msg.sender].isStakePaid = true;
     }
 
@@ -138,10 +139,11 @@ contract Charity {
     }
 
     //Function to check whether the time of voting for the registered organizations is finish or not.
-    function votingDone(
-        address org_address,
-        uint256 current_time
-    ) public view returns (bool) {
+    function votingDone(address org_address, uint256 current_time)
+        public
+        view
+        returns (bool)
+    {
         if (orgIdentifier[org_address].application_time < current_time) {
             return true;
         } else {
@@ -160,7 +162,7 @@ contract Charity {
         OrgDetails[] memory verified_org = new OrgDetails[](verified_org_cnt);
         for (uint256 i = 0; i < len; i++) {
             address org_addr = organizationAddress[i];
-            if (orgIdentifier[org_addr].verification_status && orgIdentifier[organizationAddress[i]].verification_status &&
+            if (orgIdentifier[org_addr].verification_status  &&
                 orgIdentifier[organizationAddress[i]].isStakePaid) {
                 Organization storage new_org = orgIdentifier[org_addr];
                 OrgDetails memory new_org_det = OrgDetails({
@@ -252,9 +254,6 @@ contract Charity {
     // ) public returns (bool) {}
 
     // FUNCTIONS OF ORGANIZATIONS
-    function checkAlreadyRegistered() public view returns (bool) {
-        return orgIdentifier[msg.sender].application_time != 0;
-    }
 
     // Function to register the organization onto the website.
     function registerOrg(
@@ -343,8 +342,8 @@ contract Charity {
     //     }
     //     return status;
     // }
-
     // Function to distribute the stake to the companies in favour.
+    
     function distributeStake(address org_address, bool category) public {
         if (category) {
             uint256 sum = 0;
@@ -405,10 +404,11 @@ contract Charity {
     }
 
     // Function to change the status of isStakePaid and add the organization into the list of verified organization.
-    function changeStakePaid() public {
-        orgIdentifier[msg.sender].isStakePaid = true;
-        distributeStake(msg.sender, true);
-        markAsVerified(msg.sender);
+    function changeStakePaid(address org_address, uint256 stakeAmount) public {
+        orgIdentifier[org_address].isStakePaid = true;
+        distributeStake(org_address, true);
+        orgIdentifier[org_address].stake = stakeAmount;
+        markAsVerified(org_address);
     }
 
     // Function to put the organization into the verified list. This has to be called after the stake is paid.
@@ -509,6 +509,8 @@ contract Charity {
     // FUNCTIONS OF VIOLATIONS
 
     // Function used to register the violation of the organization.
+
+ 
     function registerViolation(
         address organization_address,
         string memory document_cid,
@@ -524,9 +526,52 @@ contract Charity {
         vio.start_time = registration_time;
         vio.end_time = registration_time + 5 days;
         vio.isOpen = true;
-
+        vio.isViolated = true;
+        violationsRegistered.push(vio);
+        
         violationMap[registeredViolations] = vio;
         registeredViolations = registeredViolations + 1;
+    }
+
+           //     uint256 id;
+        // address org_address;
+        // string doc_cid;
+        // string desc;
+        // uint256 upvotes;
+        // uint256 downvotes;
+        // address[] upvoters;
+        // address[] downvoters;
+        // bool isOpen;
+        // uint256 start_time;
+        // uint256 end_time;
+        // bool isViolated;
+    function getViolationList() public view returns(Violation [] memory){
+        Violation [] memory violationList = new Violation[](registeredViolations);
+        uint256 cnt = 0;
+        for (uint256 i = 0; i < registeredViolations; i++) {
+            address org_addr = violationsRegistered[i].org_address;
+            if(violationsRegistered[i].isOpen)
+            {   Violation memory new_vio = Violation({
+                    id: violationsRegistered[i].id,
+                    org_address: violationsRegistered[i].org_address,
+                    desc: violationsRegistered[i].desc,
+                    doc_cid: violationsRegistered[i].doc_cid,
+                    upvotes: violationsRegistered[i].upvotes,
+                    downvotes:violationsRegistered[i].downvotes,
+                    upvoters:violationsRegistered[i].upvoters,
+                    downvoters: violationsRegistered[i].downvoters,
+                    isOpen: violationsRegistered[i].isOpen,
+                    start_time: violationsRegistered[i].start_time,
+                    end_time: violationsRegistered[i].end_time,
+                    isViolated: violationsRegistered[i].isViolated
+                });
+                violationList[cnt] = new_vio;
+                cnt += 1;
+            }
+            
+        }
+        return violationList;
+
     }
 
     // Function used for upvoting the violations of the organization.
@@ -818,6 +863,7 @@ contract Charity {
     }
 }
 
+
 // Algorithm
 // time of registration = 1400 (12.00 pm)
 // 12 hrs adds 1000 to system time.
@@ -851,3 +897,4 @@ contract Charity {
 //    1) checkFinancialReportStatus
 //    2) upvotedOnFinancialReport
 //    3) RemoveCharityIfFinancialReportFraud(org_address);
+

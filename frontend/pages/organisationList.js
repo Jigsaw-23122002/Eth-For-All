@@ -40,17 +40,15 @@ export default function organisationList() {
             const today = new Date();
             const timeNow = Math.floor((today.getTime()) / 1000);
             console.log(timeNow);
-            const getregistered = await regContract.registerOrg("0xb8D2a8ea54F71294f50e7088768Bd96eBED17946", "Ananya  ", "bafybeieo76izxgib3xu5bwsrjnoolylmp2pdoigkmhomqe5dnbysmisfee", 'Unfortunately, factors outside of anyone’s control make it hard for some people to reach their potential: things like when they were born, who their parents are, where they grew up, whether they are a boy or a girl.We wake up every day determined to use our resources to create a world where everyone has the opportunity to lead a healthy and productive life. Most importantly, we believe this: All lives have equal value.', timeNow);
+            const getregistered = await regContract.registerOrg("0x0e0181444315407F1d0967CBDd5563c1c162A48f", "Ananya  ", "bafybeieo76izxgib3xu5bwsrjnoolylmp2pdoigkmhomqe5dnbysmisfee", 'Unfortunately, factors outside of anyone’s control make it hard for some people to reach their potential: things like when they were born, who their parents are, where they grew up, whether they are a boy or a girl.We wake up every day determined to use our resources to create a world where everyone has the opportunity to lead a healthy and productive life. Most importantly, we believe this: All lives have equal value.', timeNow);
             console.log("Completed reg")
             await getregistered.wait()
             const unverifiedOrgDet = await getSetOfUnverifiedOrgs();
             console.log("Done reg")
-
         } catch (error) {
 
         }
-    console.log("Done provider");
-    return web3Provider;
+
   };
 
   const getSetOfUnverifiedOrgs = async () => {
@@ -58,8 +56,8 @@ export default function organisationList() {
       const signer = await getProviderOrSigner(true);
       const regContract = new Contract(REGISTER_CONTRACT_ADDRESS, abi, signer);
       const unverifiedOrgs = await regContract.unverifiedOrganizationsList();
-      // setLoading(true);
 
+      console.log("Inside ")
       console.log(unverifiedOrgs);
       setorgsList(unverifiedOrgs);
     } catch (error) {
@@ -160,9 +158,9 @@ export default function organisationList() {
     }
   }, [walletConnected]);
 
-  useEffect(() => {
-    getSetOfUnverifiedOrgs();
-  });
+  // useEffect(() => {
+    // getSetOfUnverifiedOrgs();
+  // });
 
   return (
     <div className=" bg-black ">
@@ -172,7 +170,7 @@ export default function organisationList() {
         </h2>
         <hr className="w-1/4 h-1 mx-auto my-4 bg-gray-600 border-0 rounded md:my-10 dark:bg-gray-700"></hr>
         {/* <div className='bg-red-200'> */}
-        {/* {renderButton()} */}
+        {renderButton()}
         {/* </div> */}
 
         <ul className="w-3/4 p-12">

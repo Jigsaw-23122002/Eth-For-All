@@ -5,16 +5,16 @@ import { useRouter } from "next/router";
 import { Web3Storage } from 'web3.storage'
 import Web3Modal from "web3modal";
 import { REGISTER_CONTRACT_ADDRESS, abi } from '../constants/index.js';
+import 'flowbite'
 
 
-export default function reportOrg() {
+export default function reportOrg({query}) {
   const [cidValue, setcidValue] = useState("")
   const [description, setdescription] = useState("")
   const [orgAddress, setorgAddress] = useState("")
   const [orgDesc, setorgDesc] = useState("")
   const [orgtime, setorgtime] = useState("")
-  const router = useRouter();
-  const query = router.query;
+
   function getAccessToken() {
     return process.env.NEXT_PUBLIC_WEB3STORAGE_TOKEN
   }
@@ -89,12 +89,12 @@ export default function reportOrg() {
   }
 
   return (
-    <div className='bg-black p-5 flex flex-col items-center justify-center'>
+    <div className='bg-black flex flex-col items-center justify-center'>
       <h2 className="text-3xl font-extrabold pt-5 text-white">{query.name}</h2>
       <hr className="w-1/4 h-1 mx-auto  bg-gray-600 border-0 rounded my-1 dark:bg-gray-700">
       </hr>
 
-      <div className='w-1/2'>
+      <div className='w-4/5'>
 
         <div className="mb-6">
           <label htmlFor="desc" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Description</label>
