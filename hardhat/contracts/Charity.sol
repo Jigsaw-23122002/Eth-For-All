@@ -290,7 +290,7 @@ contract Charity {
         orgIdentifier[org_address].upvoters.push(msg.sender);
         voters[org_address][msg.sender] = 1;
         if (orgIdentifier[org_address].application_time < current_time) {
-             return checkVerificationStatus(org_address);
+             return checkVerificationStatus();
         } else {
             return false;
         }
@@ -306,18 +306,18 @@ contract Charity {
         orgIdentifier[org_address].downvoters.push(msg.sender);
         voters[org_address][msg.sender] = 2;
         if (orgIdentifier[org_address].application_time < current_time) {
-             return checkVerificationStatus(org_address);
+             return checkVerificationStatus();
         } else {
             return false;
         }
     }
 
     // Function to check whether the organization is verified or not.
-    function checkVerificationStatus(address org_address)
+    function checkVerificationStatus()
         public
-        
         returns (bool)
     {
+        address org_address = msg.sender;
         if (
             orgIdentifier[org_address].upvotes * 100 >= totalOrganizations * 51
         ) {
@@ -407,11 +407,13 @@ contract Charity {
     }
 
     // Function to change the status of isStakePaid and add the organization into the list of verified organization.
-    function changeStakePaid(address org_address, uint256 stakeAmount) public {
+    function changeStakePaid() public payable{
+        address org_address = msg.sender;
         orgIdentifier[org_address].isStakePaid = true;
         distributeStake(org_address, true);
-        orgIdentifier[org_address].stake = stakeAmount;
-        markAsVerified(org_address);
+        orgIdentifier[org_address].stake = msg.value;
+        markAsVerified(org_address);        
+        
     }
 
     // Function to put the organization into the verified list. This has to be called after the stake is paid.
@@ -883,6 +885,12 @@ contract Charity {
             financialReportsAddress.pop();
         }
     }
+    
+    // Function to receive Ether. msg.data must be empty
+    receive() external payable {}
+
+    // Fallback function is called when msg.data is not empty
+    fallback() external payable {}
 }
 
 // Algorithm

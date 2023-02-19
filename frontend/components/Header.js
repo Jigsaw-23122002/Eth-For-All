@@ -22,21 +22,21 @@ export default function Header() {
         </Navbar.Brand>
         <Navbar.Toggle />
         <Navbar.Collapse className="text-slate-300 ">
-          <Navbar.Link href="/" className="text-slate-300 ">
-            <div className="hover:text-slate-50">HOME</div>
+          <Navbar.Link href="/verifiedOrgList" className="text-slate-300 ">
+            <div className="hover:text-slate-50">Verified Org</div>
           </Navbar.Link>
-          <Navbar.Link href="/" className="text-slate-300 ">
-            <div className="hover:text-slate-50">helloji</div>
+          <Navbar.Link href="/organisationList" className="text-slate-300 ">
+            <div className="hover:text-slate-50">Unverified Org</div>
           </Navbar.Link>
 
-          <Navbar.Link href="/navbars" className="text-slate-300">
-            <div className="hover:text-slate-50">Contact Us</div>
+          <Navbar.Link href="/reportedOrgsList" className="text-slate-300">
+            <div className="hover:text-slate-50">Reported Org</div>
           </Navbar.Link>
-          <Navbar.Link href="/navbars" className="text-slate-300">
-            <div className="hover:text-slate-50">AboutUs</div>
+          <Navbar.Link href="/checkStatus" className="text-slate-300">
+            <div className="hover:text-slate-50">Check status</div>
           </Navbar.Link>
-          <Navbar.Link href="/navbars" className="text-slate-300">
-            <div className="hover:text-slate-50">SignIn</div>
+          <Navbar.Link href="/" className="text-slate-300">
+            <div className="hover:text-slate-50">About Us</div>
           </Navbar.Link>
         </Navbar.Collapse>
       </Navbar>
