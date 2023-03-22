@@ -54,4 +54,8 @@ app.listen(PORT, (error) => {
       "Server is Successfully Running, and App is listening on port " + PORT
     );
   else console.log("Error occurred, server can't start", error);
+<<<<<<< HEAD
 });
+=======
+});
+>>>>>>> 8cbccb960d08c73cf0380e2f8a6a3939fa4a78c0

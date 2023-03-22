@@ -1,11 +1,10 @@
 require("@nomicfoundation/hardhat-toolbox");
-require("@nomiclabs/hardhat-ethers");
 require("@openzeppelin/hardhat-upgrades");
 require("dotenv").config({ path: ".env" });
 
-/** @type import('hardhat/config').HardhatUserConfig */
 const ALCHEMY_API_KEY_URL = process.env.ALCHEMY_API_KEY_URL;
-const GOERLI_PVT_KEY = process.env.GOERLI_PVT_KEY;
+const GOERLI_PRIVATE_KEY = process.env.GOERLI_PRIVATE_KEY;
+
 module.exports = {
   solidity: {
     version: "0.8.17",
@@ -19,7 +18,7 @@ module.exports = {
   networks: {
     goerli: {
       url: ALCHEMY_API_KEY_URL,
-      accounts: [GOERLI_PVT_KEY],
+      accounts: [GOERLI_PRIVATE_KEY],
       chainId: 5,
       allowUnlimitedContractSize: true,
     },

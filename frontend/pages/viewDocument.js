@@ -51,6 +51,7 @@ export default function viewDocument() {
         console.log(val._isBigNumber);
         console.log(val.toString());
         setorg_upvotes(val.toString());
+        router.push({pathname:'/organisationList'})
        
     }
     const downVoteOrg = async () => {

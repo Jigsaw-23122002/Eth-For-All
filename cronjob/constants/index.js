@@ -1,7 +1,6 @@
-
 const ALCHEMY_RPC_URL =
   "https://eth-goerli.g.alchemy.com/v2/FvGvtDqjaAB4ovhP-eDlIxI1tufnJWyX";
-const CONTRACT_ADDRESS = "0xd899F753A484eeB6d51392e7270562C370ed0c40";
+const CONTRACT_ADDRESS = "0x41b25d18FA410c7e9772d99A6dE7F8F817813405";
 const CONTRACT_ABI = [
   {
     inputs: [],

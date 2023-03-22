@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // const { ethers } = require("hardhat");
 
 // async function main() {
@@ -28,9 +29,28 @@ async function main() {
   await deployedCharityContract.deployed();
   console.log("Charity Contract Address : ", deployedCharityContract.address);
 }
+const { ethers } = require("hardhat");
+
+async function main() {
+  const registerOrgContract = await ethers.getContractFactory("Charity");
+  const deployedRegisterOrgContract = await registerOrgContract.deploy();
+  await deployedRegisterOrgContract.deployed();
+  console.log("Contract Address: ", deployedRegisterOrgContract.address);
+
+}
+
+require("dotenv").config({ path: ".env" });
+
+async function main() {
+  const charityContract = await ethers.getContractFactory("Charity");
+  const deployedCharityContract = await charityContract.deploy();
+  await deployedCharityContract.deployed();
+  console.log("Charity Contract Address : ", deployedCharityContract.address);
+}
 main()
   .then(() => process.exit(0))
   .catch((error) => {
     console.error(error);
     process.exit(1);
+  });
   });
