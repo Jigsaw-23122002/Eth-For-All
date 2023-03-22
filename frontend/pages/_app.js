@@ -1,15 +1,18 @@
-import "../styles/globals.css";
+import '../styles/globals.css'
+import { MoralisProvider } from "react-moralis";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 
 function MyApp({ Component, pageProps }) {
-  return (
-    <div>
+  return (<>
+    <MoralisProvider initializeOnMount={false}>
       <Header />
       <Component {...pageProps} />
       <Footer />
-    </div>
-  );
+    </MoralisProvider>
+  </>);
+
+
 }
 
-export default MyApp;
+export default MyApp
